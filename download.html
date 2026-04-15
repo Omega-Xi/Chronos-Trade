@@ -611,7 +611,7 @@
             link.href = downloadUrl;
             link.download = ''; // Let CDN handle filename
             document.body.appendChild(link);
-            link.click();
+            //link.click();
             document.body.removeChild(link);
             
             // Show post-download instruction
@@ -673,7 +673,7 @@
     const downloadNavLink = document.getElementById('downloadNavLink');
     const earlyAccessBtn = document.getElementById('earlyAccessBtn');
     
-    if (homeLink) homeLink.addEventListener('click', (e) => { e.preventDefault(); showToast('🏠 Returning to homepage', false); setTimeout(() => window.location.href = 'index.html', 800); });
+    if (homeLink) homeLink.addEventListener('click', (e) => { e.preventDefault(); showToast('🏠 Returning to homepage', true); setTimeout(() => window.location.href = 'index.html', 800); });
     if (featuresLink) featuresLink.addEventListener('click', (e) => { e.preventDefault(); showToast('✨ Explore ChronosTrade features', true); setTimeout(() => window.location.href = 'features.html', 800); });
     if (pricingLink) pricingLink.addEventListener('click', (e) => { e.preventDefault(); showToast('💰 View pricing plans', true); setTimeout(() => window.location.href = 'pricing.html', 800); });
     if (docsLink) docsLink.addEventListener('click', (e) => { e.preventDefault(); showToast('📚 Developer documentation', true); setTimeout(() => window.location.href = 'docs.html', 800); });
