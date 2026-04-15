@@ -756,7 +756,7 @@
     // Initial order book
     updateOrderBook(lastPrice);
     
-    let intervalId = setInterval(updateRealtime, 2200);
+    let intervalId = setInterval(updateRealtime, 1000);
 
     // Timeframe switcher (demo: just regenerate some data style)
     const tfBtns = document.querySelectorAll('.tf-btn');
