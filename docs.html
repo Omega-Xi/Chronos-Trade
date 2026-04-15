@@ -297,6 +297,7 @@
             <a href="#" id="featuresLink">Features</a>
             <a href="#" id="pricingLink">Pricing</a>
             <a href="#" class="active" id="docsLink">Docs</a>
+            <a href="#" id="downloadLink">Download</a>
         </div>
         <div><button class="btn-outline" id="apiKeyBtn">Get API Key →</button></div>
     </nav>
@@ -575,10 +576,11 @@ console.log('OCO id:', response.orderId);</code></pre>
     const docsLink = document.getElementById('docsLink');
     const apiKeyBtn = document.getElementById('apiKeyBtn');
     
-    if (homeLink) homeLink.addEventListener('click', (e) => { e.preventDefault(); showToast('🏠 Redirecting to ChronosTrade homepage', false); window.location.href = 'index.html'; });
-    if (featuresLink) featuresLink.addEventListener('click', (e) => { e.preventDefault(); showToast('✨ Explore platform features — AI, 0.2ms engine, and more', true); });
-    if (pricingLink) pricingLink.addEventListener('click', (e) => { e.preventDefault(); showToast('💰 View flexible pricing plans for every trader', true); });
+    if (homeLink) homeLink.addEventListener('click', (e) => { e.preventDefault(); showToast('🏠 Redirecting to ChronosTrade homepage', true); setTimeout(() => window.location.href = 'index.html', 800); });
+    if (featuresLink) featuresLink.addEventListener('click', (e) => { e.preventDefault(); showToast('✨ Explore platform features — AI, 0.2ms engine, and more', true); setTimeout(() => window.location.href = 'features.html', 800); });
+    if (pricingLink) pricingLink.addEventListener('click', (e) => { e.preventDefault(); showToast('💰 View flexible pricing plans for every trader', true); setTimeout(() => window.location.href = 'pricing.html', 800); });
     if (docsLink) docsLink.addEventListener('click', (e) => { e.preventDefault(); showToast('📚 You are in the Developer Documentation section', true); });
+    if (downloadLink) downloadLink.addEventListener('click', (e) => { e.preventDefault(); showToast('⬇️ Download ChronosTrade desktop app for Windows/Mac/Linux', true); setTimeout(() => window.location.href = 'download.html', 800); });
     if (apiKeyBtn) apiKeyBtn.addEventListener('click', () => { showToast('🔑 API key management — open ChronosTrade desktop → Settings → API', true); });
     
     // prism highlight after load

@@ -908,10 +908,12 @@
     if (docsLink) docsLink.addEventListener('click', (e) => {
         e.preventDefault();
         notify('📚 Developer documentation — API references, WebSocket streams, and Chronos scripting guide.', true);
+        setTimeout(() => window.location.href = 'docs.html', 800);
     });
     if (downloadLink) downloadLink.addEventListener('click', (e) => {
         e.preventDefault();
         notify('📥 Download page — Get the latest version of ChronosTrade for your platform.', true);
+        setTimeout(() => window.location.href = 'download.html', 800);
     });
     
     // pricing buttons interaction

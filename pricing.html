@@ -659,8 +659,8 @@
     if (homeLink) homeLink.addEventListener('click', (e) => { e.preventDefault(); showToast('🏠 Returning to homepage (dashboard preview).', true); setTimeout(() => window.location.href = 'index.html', 800); });
     if (featuresLink) featuresLink.addEventListener('click', (e) => { e.preventDefault(); showToast('✨ Explore our bleeding-edge features: AI, 0.2ms engine, scripting.', true); setTimeout(() => window.location.href = 'features.html', 800); });
     if (pricingLink) pricingLink.addEventListener('click', (e) => { e.preventDefault(); showToast('💰 You are on the Pricing page — choose your perfect plan.', false); });
-    if (docsLink) docsLink.addEventListener('click', (e) => { e.preventDefault(); showToast('📘 ChronosTrade API docs & scripting guide — available for Pro+ users.', true); });
-    if (downloadLink) downloadLink.addEventListener('click', (e) => { e.preventDefault(); showToast('📥 Download page — Get the latest version of ChronosTrade for your platform.', true); });
+    if (docsLink) docsLink.addEventListener('click', (e) => { e.preventDefault(); showToast('📘 ChronosTrade API docs & scripting guide — available for Pro+ users.', true); setTimeout(() => window.location.href = 'docs.html', 800); });
+    if (downloadLink) downloadLink.addEventListener('click', (e) => { e.preventDefault(); showToast('📥 Download page — Get the latest version of ChronosTrade for your platform.', true); setTimeout(() => window.location.href = 'download.html', 800); });
     if (earlyBtn) earlyBtn.addEventListener('click', () => { showToast('🔓 Early access code sent! Private beta includes Pro features for 30 days.', true); });
 
     // Hover effect for faq items and cards
