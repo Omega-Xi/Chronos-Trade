@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChronosTrade | Precision Timing with Live Charts</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- TradingView Lightweight Charts -->
+    <script src="https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0a0c12;
+            color: #eef5ff;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* animated gradient mesh background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 20% 30%, rgba(10, 20, 40, 0.9), #03050a);
+            overflow: hidden;
+        }
+
+        .animated-bg::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 40px,
+                rgba(0, 255, 255, 0.03) 40px,
+                rgba(0, 255, 255, 0.06) 80px
+            );
+            animation: drift 3s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(10%, 10%) rotate(2deg); }
+        }
+
+        /* particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 8px #0ff;
+            border-radius: 50%;
+            animation: floatParticle 12s infinite alternate ease-in-out;
+        }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(0px) translateX(0px); opacity: 0.2; }
+            100% { transform: translateY(-80px) translateX(40px); opacity: 0.7; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo span {
+            font-size: 1rem;
+            background: none;
+            color: #0ff;
+        }
+
+        .nav-links a {
+            color: #ccddf8;
+            margin-left: 2rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #0ff;
+        }
+
+        .btn-primary {
+            background: linear-gradient(95deg, #0b2b3b, #0a6c7c);
+            border: 1px solid rgba(0, 255, 255, 0.6);
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px #0ff;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #0ff;
+            padding: 0.7rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #0ff;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: #0ff22a20;
+            box-shadow: 0 0 10px #0ff;
+        }
+
+        /* Hero with Chart */
+        .hero {
+            display: flex;
+            align-items: stretch;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin: 3rem 0 4rem;
+            gap: 2rem;
+        }
+
+        .hero-text {
+            flex: 1.2;
+            min-width: 280px;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #ffffff, #7ffbff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: #b4c9f0;
+            margin: 1.5rem 0;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat {
+            background: rgba(0, 20, 40, 0.5);
+            backdrop-filter: blur(8px);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border-left: 3px solid #0ff;
+        }
+
+        .stat h3 {
+            font-size: 1.6rem;
+            color: #0ff;
+        }
+
+        /* Chart Panel */
+        .chart-panel {
+            flex: 1.8;
+            min-width: 500px;
+            background: rgba(6, 12, 20, 0.65);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 1rem;
+            box-shadow: 0 20px 35px -15px black;
+            transition: all 0.3s;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+            flex-wrap: wrap;
+        }
+
+        .symbol-info {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+        }
+
+        .symbol {
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: #0ff;
+        }
+
+        .exchange {
+            font-size: 0.8rem;
+            color: #8ba0bc;
+        }
+
+        .live-badge {
+            background: #ff3366;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .timeframe-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .tf-btn {
+            background: rgba(0, 255, 255, 0.1);
+            border: none;
+            color: #ccddf8;
+            padding: 0.2rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+
+        .tf-btn.active, .tf-btn:hover {
+            background: #0ff;
+            color: #0a0c12;
+        }
+
+        #chart-container {
+            width: 100%;
+            height: 320px;
+            position: relative;
+        }
+
+        .orderbook-mini {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            gap: 1rem;
+            font-size: 0.75rem;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 0.8rem;
+        }
+
+        .bid-col, .ask-col {
+            flex: 1;
+        }
+
+        .bid-row, .ask-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.2rem 0;
+            font-family: monospace;
+        }
+
+        .bid-price { color: #00ffaa; }
+        .ask-price { color: #ff5577; }
+
+        /* Features & rest */
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin: 4rem 0 2rem;
+        }
+        .section-title:after {
+            content: '';
+            width: 80px;
+            height: 3px;
+            background: #0ff;
+            display: block;
+            margin: 0.5rem auto 0;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        .feature-card {
+            background: rgba(12, 22, 35, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 2rem 1.5rem;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            text-align: center;
+            transition: 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: #0ff;
+        }
+        .feature-card i {
+            font-size: 2.5rem;
+            color: #0ff;
+            margin-bottom: 1rem;
+        }
+        .pricing {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        .price-card {
+            background: rgba(8, 18, 28, 0.75);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
+            padding: 2rem;
+            width: 300px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            text-align: center;
+        }
+        .price-card.popular {
+            border: 2px solid #0ff;
+            box-shadow: 0 0 20px #0ff33a60;
+        }
+        .price {
+            font-size: 2.8rem;
+            color: #0ff;
+            margin: 1rem 0;
+        }
+        .cta-section {
+            background: linear-gradient(145deg, #021a24, #000a12);
+            border-radius: 48px;
+            padding: 3rem;
+            text-align: center;
+            margin: 5rem 0;
+        }
+        footer {
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+            padding: 2rem 0;
+            text-align: center;
+            color: #8ba0bc;
+        }
+        @media (max-width: 900px) {
+            .chart-panel { min-width: 100%; }
+            .hero-text h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="animated-bg"></div>
+<div class="particles" id="particleContainer"></div>
+
+<div class="container">
+    <nav class="navbar">
+        <div class="logo">ChronosTrade <span>⏱️</span></div>
+        <div class="nav-links">
+            <a href="#">Features</a>
+            <a href="#">Pricing</a>
+            <a href="#">Docs</a>
+            <a href="#">Download</a>
+        </div>
+        <div><button class="btn-outline" id="earlyAccessBtn">Early Access →</button></div>
+    </nav>
+
+    <div class="hero">
+        <div class="hero-text">
+            <h1>Live market intelligence <br> <span style="color:#0ff;">on every tick</span></h1>
+            <p>ChronosTrade integrates a professional-grade charting engine with sub-millisecond execution. See the flow, predict the move.</p>
+            <div class="hero-stats">
+                <div class="stat"><h3>0.2ms</h3><p>latency</p></div>
+                <div class="stat"><h3>24/7</h3><p>algo engine</p></div>
+                <div class="stat"><h3>15+</h3><p>exchanges</p></div>
+            </div>
+            <div>
+                <button class="btn-primary" id="downloadBtn">Download for Windows / macOS</button>
+                <button class="btn-outline" style="margin-left: 1rem;" id="watchDemo">Watch demo</button>
+            </div>
+        </div>
+
+        <!-- LIVE CHART PANEL (Fully integrated) -->
+        <div class="chart-panel">
+            <div class="chart-header">
+                <div class="symbol-info">
+                    <span class="symbol">BTC/USDT</span>
+                    <span class="exchange">Perpetual Futures</span>
+                    <span class="live-badge">● LIVE</span>
+                </div>
+                <div class="timeframe-buttons" id="timeframe-group">
+                    <button class="tf-btn" data-tf="1m">1m</button>
+                    <button class="tf-btn active" data-tf="5m">5m</button>
+                    <button class="tf-btn" data-tf="1h">1h</button>
+                </div>
+            </div>
+            <div id="chart-container"></div>
+            <!-- Mini orderbook simulation -->
+            <div class="orderbook-mini">
+                <div class="bid-col">
+                    <div style="margin-bottom: 4px; color:#0ff">Bids</div>
+                    <div id="bid-list"></div>
+                </div>
+                <div class="ask-col">
+                    <div style="margin-bottom: 4px; color:#ff88aa">Asks</div>
+                    <div id="ask-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="section-title">Core technologies</h2>
+    <div class="features-grid">
+        <div class="feature-card"><i class="fas fa-microchip"></i><h3>Hardware accelerated</h3><p>C++ core with FPGA-ready architecture.</p></div>
+        <div class="feature-card"><i class="fas fa-brain"></i><h3>AI predictive models</h3><p>LSTM + transformer models.</p></div>
+        <div class="feature-card"><i class="fas fa-chart-simple"></i><h3>Custom scripting</h3><p>Python & JS sandbox.</p></div>
+        <div class="feature-card"><i class="fas fa-shield-alt"></i><h3>Bank-grade security</h3><p>Biometric MFA, encrypted RAM.</p></div>
+        <div class="feature-card"><i class="fas fa-chart-line"></i><h3>Multi-monitor HUD</h3><p>50+ charting tools & heatmaps.</p></div>
+        <div class="feature-card"><i class="fas fa-clock"></i><h3>Chronos Engine™</h3><p>Nanosecond timestamping.</p></div>
+    </div>
+
+    <h2 class="section-title">Plans for every trader</h2>
+    <div class="pricing">
+        <div class="price-card"><i class="fas fa-chart-line"></i><h3>Explorer</h3><div class="price">$29<span style="font-size:1rem;">/mo</span></div><button class="btn-outline">Get started</button></div>
+        <div class="price-card popular"><i class="fas fa-crown"></i><h3>Pro Trader</h3><div class="price">$79<span style="font-size:1rem;">/mo</span></div><button class="btn-primary">Start Pro trial</button></div>
+        <div class="price-card"><i class="fas fa-building"></i><h3>Institutional</h3><div class="price">Custom</div><button class="btn-outline">Contact sales</button></div>
+    </div>
+
+    <div class="cta-section">
+        <h2 style="font-size: 2rem;">Ready to synchronize your edge?</h2>
+        <p style="margin: 1rem auto; max-width: 600px;">Join 5,000+ elite traders using ChronosTrade. Download now and get 14-day full access to Pro features.</p>
+        <button class="btn-primary" id="ctaDownloadBtn" style="padding: 1rem 2.5rem;">⚡ Download ChronosTrade</button>
+    </div>
+    <footer><p>© 2026 ChronosTrade — Precision timing lab.</p></footer>
+</div>
+
+<script>
+    // Particles
+    const container = document.getElementById('particleContainer');
+    for (let i = 0; i < 50; i++) {
+        const p = document.createElement('div');
+        p.classList.add('particle');
+        p.style.width = (Math.random() * 4 + 2) + 'px';
+        p.style.height = p.style.width;
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = Math.random() * 100 + '%';
+        p.style.animationDuration = (8 + Math.random() * 15) + 's';
+        p.style.animationDelay = (Math.random() * 10) + 's';
+        container.appendChild(p);
+    }
+
+    // ---------- CHART IMPLEMENTATION (Lightweight Charts) ----------
+    const chartElement = document.getElementById('chart-container');
+    const chart = LightweightCharts.createChart(chartElement, {
+        width: chartElement.clientWidth,
+        height: 320,
+        layout: {
+            background: { color: 'transparent' },
+            textColor: '#c3d4f0',
+        },
+        grid: {
+            vertLines: { color: 'rgba(0, 255, 255, 0.08)' },
+            horzLines: { color: 'rgba(0, 255, 255, 0.08)' },
+        },
+        crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+        rightPriceScale: { borderColor: 'rgba(0, 255, 255, 0.2)' },
+        timeScale: { borderColor: 'rgba(0, 255, 255, 0.2)', timeVisible: true, secondsVisible: false },
+    });
+
+    const candlestickSeries = chart.addCandlestickSeries({
+        upColor: '#00ffaa',
+        downColor: '#ff5577',
+        borderDownColor: '#ff5577',
+        borderUpColor: '#00ffaa',
+        wickDownColor: '#ff5577',
+        wickUpColor: '#00ffaa',
+    });
+
+    // Generate mock historical data (last 100 candles)
+    let basePrice = 42500;
+    const historicalData = [];
+    const now = new Date();
+    for (let i = 100; i > 0; i--) {
+        const time = new Date(now.getTime() - i * 5 * 60 * 1000); // 5 min intervals
+        const change = (Math.random() - 0.5) * 300;
+        const open = basePrice;
+        const close = basePrice + change;
+        const high = Math.max(open, close) + Math.random() * 150;
+        const low = Math.min(open, close) - Math.random() * 150;
+        historicalData.push({ time: time.getTime() / 1000, open, high, low, close });
+        basePrice = close;
+    }
+    candlestickSeries.setData(historicalData);
+    chart.timeScale().fitContent();
+
+    // Simulate real-time updates (every 2 secs)
+    let lastPrice = historicalData[historicalData.length-1].close;
+    let volumeProfile = [];
+
+    function updateRealtime() {
+        const change = (Math.random() - 0.48) * 80;
+        const newClose = lastPrice + change;
+        const newHigh = Math.max(lastPrice, newClose) + Math.random() * 60;
+        const newLow = Math.min(lastPrice, newClose) - Math.random() * 50;
+        const newCandle = {
+            time: Math.floor(Date.now() / 1000),
+            open: lastPrice,
+            high: newHigh,
+            low: newLow,
+            close: newClose,
+        };
+        candlestickSeries.update(newCandle);
+        lastPrice = newClose;
+        
+        // Update mini orderbook simulation based on price
+        updateOrderBook(lastPrice);
+    }
+
+    function updateOrderBook(price) {
+        const bidList = document.getElementById('bid-list');
+        const askList = document.getElementById('ask-list');
+        let bidsHtml = '', asksHtml = '';
+        for (let i = 1; i <= 5; i++) {
+            let bidPrice = (price - i * 12.5).toFixed(2);
+            let askPrice = (price + i * 15.2).toFixed(2);
+            let bidSize = (Math.random() * 2.5).toFixed(2);
+            let askSize = (Math.random() * 2.2).toFixed(2);
+            bidsHtml += `<div class="bid-row"><span>${bidPrice}</span><span>${bidSize} BTC</span></div>`;
+            asksHtml += `<div class="ask-row"><span>${askPrice}</span><span>${askSize} BTC</span></div>`;
+        }
+        bidList.innerHTML = bidsHtml;
+        askList.innerHTML = asksHtml;
+    }
+
+    // Initial order book
+    updateOrderBook(lastPrice);
+    
+    let intervalId = setInterval(updateRealtime, 2200);
+
+    // Timeframe switcher (demo: just regenerate some data style)
+    const tfBtns = document.querySelectorAll('.tf-btn');
+    tfBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            tfBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const tf = btn.getAttribute('data-tf');
+            // change candle interval simulation: just randomize a bit
+            const newData = [];
+            let tempPrice = historicalData[0].open;
+            let multiplier = tf === '1m' ? 1 : (tf === '5m' ? 5 : 60);
+            for (let i = 0; i < 60; i++) {
+                const change = (Math.random() - 0.5) * 120;
+                const open = tempPrice;
+                const close = tempPrice + change;
+                const high = Math.max(open, close) + Math.random() * 100;
+                const low = Math.min(open, close) - Math.random() * 80;
+                const time = Math.floor(Date.now() / 1000) - (60 - i) * multiplier * 60;
+                newData.push({ time, open, high, low, close });
+                tempPrice = close;
+            }
+            candlestickSeries.setData(newData);
+            lastPrice = newData[newData.length-1].close;
+            chart.timeScale().fitContent();
+            updateOrderBook(lastPrice);
+        });
+    });
+
+    // Handle resize
+    window.addEventListener('resize', () => {
+        chart.applyOptions({ width: chartElement.clientWidth });
+        setTimeout(() => chart.timeScale().fitContent(), 100);
+    });
+
+    // Interaction Notifications (keep professional)
+    document.getElementById('downloadBtn')?.addEventListener('click', () => alert('📦 ChronosTrade installer download started.'));
+    document.getElementById('ctaDownloadBtn')?.addEventListener('click', () => alert('✅ 14-day Pro trial activated. Check your email.'));
+    document.getElementById('earlyAccessBtn')?.addEventListener('click', () => alert('🚀 Early access invite sent.'));
+    document.getElementById('watchDemo')?.addEventListener('click', () => alert('🎥 Launching interactive demo of Chronos Engine.'));
+    const priceBtns = document.querySelectorAll('.price-card button');
+    priceBtns.forEach(btn => btn.addEventListener('click', () => alert('⚡ Redirecting to secure checkout.')));
+</script>
+</body>
+</html>
