@@ -128,7 +128,7 @@
             transition: 0.2s;
         }
 
-        .nav-links a:hover {
+        .nav-links a:hover ,.nav-links a.active {
             color: #0ff;
         }
 
@@ -537,10 +537,11 @@
                 </div>
             </div> ChronosTrade</div>
         <div class="nav-links">
-            <a href="#">Features</a>
-            <a href="#">Pricing</a>
-            <a href="#">Docs</a>
-            <a href="#">Download</a>
+            <a href="#" class="active" id="homeLink">Home</a>
+            <a href="#" id="featuresLink">Features</a>
+            <a href="#" id="pricingLink">Pricing</a>
+            <a href="#" id="docsLink">Docs</a>
+            <a href="#" id="downloadLink">Download</a>
         </div>
         <div><button class="btn-outline" id="earlyAccessBtn">Early Access →</button></div>
     </nav>
@@ -883,6 +884,35 @@
             notify('Demo playback ready. Experience 0.2ms execution in your browser sandbox.', true);
         }, 200);
     });
+
+    const featuresLink = document.getElementById('featuresLink');
+    const pricingLink = document.getElementById('pricingLink');
+    const docsLink = document.getElementById('docsLink');
+    const homeLink = document.getElementById('homeLink');
+    const downloadLink = document.getElementById('downloadLink');
+    
+    if (homeLink) homeLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        notify('🏠 You are already on the ChronosTrade homepage.', false);
+    });
+    if (featuresLink) featuresLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        notify('✨ Explore the advanced features of ChronosTrade.', true);
+        setTimeout(() => window.location.href = 'features.html', 800)
+    });
+    if (pricingLink) pricingLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        notify('💰 View our pricing plans: Explorer $29/mo | Pro $79/mo | Custom institutional.', true);
+        setTimeout(() => window.location.href = 'pricing.html', 800);
+    });
+    if (docsLink) docsLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        notify('📚 Developer documentation — API references, WebSocket streams, and Chronos scripting guide.', true);
+    });
+    if (downloadLink) downloadLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        notify('📥 Download page — Get the latest version of ChronosTrade for your platform.', true);
+    });
     
     // pricing buttons interaction
     allPriceButtons.forEach(btn => {
@@ -895,15 +925,6 @@
                 if (titleElem) plan = titleElem.innerText.trim().replace('POPULAR', '').trim();
             }
             notify(`⚡ You selected ${plan} plan. Redirecting to secure checkout (sandbox).`, true);
-        });
-    });
-
-    // navigation smooth scroll placeholder + glitch effect random
-    const links = document.querySelectorAll('.nav-links a');
-    links.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            notify(`🔍 ${link.innerText} section — coming soon. Full documentation live in Q2 2026.`, false);
         });
     });
 

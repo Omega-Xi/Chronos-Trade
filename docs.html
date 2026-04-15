@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChronosTrade | Developer Docs & API Reference</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Syntax Highlighting (prism.js) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #05070c;
+            color: #eef5ff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* animated bg */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 80% 30%, #0a1428, #010308);
+        }
+        .animated-bg::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 50px,
+                rgba(0, 255, 255, 0.02) 50px,
+                rgba(0, 255, 255, 0.04) 100px
+            );
+            animation: driftGrid 14s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes driftGrid {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(5%, 8%) rotate(1deg); }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            background: rgba(0, 255, 255, 0.15);
+            border-radius: 50%;
+            animation: floatDoc 18s infinite alternate ease-in-out;
+        }
+        @keyframes floatDoc {
+            0% { transform: translateY(0px); opacity: 0.1; }
+            100% { transform: translateY(-60px) translateX(25px); opacity: 0.4; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.25);
+            backdrop-filter: blur(4px);
+        }
+        .logo {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .chronos-icon {
+            display: inline-flex;
+            width: 34px;
+            height: 34px;
+            background: radial-gradient(circle at 30% 30%, #0ff, #005f73);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 10px cyan;
+        }
+        .chronos-icon::after {
+            content: "📘";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            color: white;
+        }
+        .nav-links a {
+            color: #ccddf8;
+            margin-left: 2rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: #0ff;
+            text-shadow: 0 0 6px #0ff;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #0ff;
+            padding: 0.7rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #0ff;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn-outline:hover {
+            background: #0ff22a20;
+            box-shadow: 0 0 14px #0ff;
+        }
+
+        /* docs layout */
+        .docs-wrapper {
+            display: flex;
+            gap: 2.5rem;
+            margin: 2.5rem 0 4rem;
+            flex-wrap: wrap;
+        }
+        .sidebar {
+            flex: 1;
+            min-width: 260px;
+            background: rgba(6, 16, 26, 0.55);
+            backdrop-filter: blur(10px);
+            border-radius: 32px;
+            padding: 1.8rem;
+            border: 1px solid rgba(0,255,255,0.2);
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        .sidebar h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+            color: #0ff;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar li {
+            margin: 0.9rem 0;
+        }
+        .sidebar a {
+            color: #bbd4ff;
+            text-decoration: none;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .sidebar a:hover, .sidebar a.active-doc {
+            color: #0ff;
+            transform: translateX(5px);
+        }
+        .main-content {
+            flex: 3;
+            min-width: 280px;
+        }
+        .doc-section {
+            background: rgba(8, 18, 30, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            transition: 0.2s;
+        }
+        .doc-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #0ff;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .doc-section h3 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem;
+            color: #b8e2ff;
+        }
+        .code-block {
+            background: #0a0f18;
+            border-radius: 20px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            border-left: 4px solid #0ff;
+        }
+        pre {
+            margin: 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+        }
+        .api-endpoint {
+            background: rgba(0,255,255,0.08);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-family: monospace;
+            margin: 1rem 0;
+        }
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        .param-table th, .param-table td {
+            padding: 0.6rem;
+            border-bottom: 1px solid rgba(0,255,255,0.2);
+            text-align: left;
+        }
+        .param-table th {
+            color: #0ff;
+        }
+        .note {
+            background: rgba(0, 200, 255, 0.1);
+            padding: 1rem;
+            border-radius: 20px;
+            border-left: 3px solid #0ff;
+            margin: 1rem 0;
+        }
+        .badge-doc {
+            background: #0a6c7c;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        footer {
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+            padding: 2rem 0;
+            text-align: center;
+            color: #8ba0bc;
+            margin-top: 2rem;
+        }
+        @media (max-width: 900px) {
+            .sidebar { position: relative; }
+            .container { padding: 0 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="animated-bg"></div>
+<div class="particles" id="particleContainer"></div>
+
+<div class="container">
+    <nav class="navbar">
+        <div class="logo">
+            <span class="chronos-icon"></span> ChronosTrade
+        </div>
+        <div class="nav-links">
+            <a href="#" id="homeLink">Home</a>
+            <a href="#" id="featuresLink">Features</a>
+            <a href="#" id="pricingLink">Pricing</a>
+            <a href="#" class="active" id="docsLink">Docs</a>
+        </div>
+        <div><button class="btn-outline" id="apiKeyBtn">Get API Key →</button></div>
+    </nav>
+
+    <div class="docs-wrapper">
+        <!-- Sidebar navigation -->
+        <div class="sidebar">
+            <h3><i class="fas fa-book-open"></i> Documentation</h3>
+            <ul>
+                <li><a href="#getting-started" class="sidebar-link" data-target="getting-started"><i class="fas fa-rocket"></i> Getting Started</a></li>
+                <li><a href="#rest-api" class="sidebar-link" data-target="rest-api"><i class="fas fa-code"></i> REST API</a></li>
+                <li><a href="#websocket" class="sidebar-link" data-target="websocket"><i class="fas fa-bolt"></i> WebSocket Streams</a></li>
+                <li><a href="#scripting" class="sidebar-link" data-target="scripting"><i class="fab fa-python"></i> Scripting (Python/JS)</a></li>
+                <li><a href="#chronos-engine" class="sidebar-link" data-target="chronos-engine"><i class="fas fa-microchip"></i> Chronos Engine</a></li>
+                <li><a href="#examples" class="sidebar-link" data-target="examples"><i class="fas fa-chart-line"></i> Code Examples</a></li>
+                <li><a href="#faq-docs" class="sidebar-link" data-target="faq-docs"><i class="fas fa-question-circle"></i> FAQ</a></li>
+            </ul>
+        </div>
+
+        <!-- Main doc content -->
+        <div class="main-content">
+            <!-- Getting Started -->
+            <div id="getting-started" class="doc-section">
+                <h2><i class="fas fa-rocket"></i> Getting Started</h2>
+                <p>Welcome to ChronosTrade developer hub. Our platform provides ultra-low-latency market data, execution, and AI-powered analytics via REST, WebSocket, and native scripting APIs.</p>
+                <div class="note">
+                    <i class="fas fa-key"></i> <strong>Authentication:</strong> All API requests require an API key. Generate one from the ChronosTrade desktop app under <code>Settings → API Management</code>.
+                </div>
+                <div class="code-block">
+                    <pre><code class="language-bash"># Example: authenticate using API key
+curl -X GET "https://api.chronostrade.io/v1/account" \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json"</code></pre>
+                </div>
+                <p><span class="badge-doc">Base URL</span> <code>https://api.chronostrade.io/v1</code> | <span class="badge-doc">Rate limits</span> 1000 req/sec for Pro, 200 req/sec for Explorer.</p>
+            </div>
+
+            <!-- REST API -->
+            <div id="rest-api" class="doc-section">
+                <h2><i class="fas fa-code"></i> REST API Reference</h2>
+                <p>Comprehensive endpoints for market data, orders, and account management.</p>
+                <div class="api-endpoint">
+                    <strong>GET /market/ticker/{symbol}</strong> — Get latest price & volume
+                </div>
+                <div class="code-block">
+                    <pre><code class="language-json">// Response example for BTC/USDT
+{
+  "symbol": "BTC/USDT",
+  "bid": 43250.25,
+  "ask": 43252.10,
+  "last": 43251.80,
+  "volume_24h": 12450.3,
+  "timestamp": 1744789200000
+}</code></pre>
+                </div>
+                <div class="api-endpoint">
+                    <strong>POST /order</strong> — Place new order (limit/market/stop)
+                </div>
+                <table class="param-table">
+                    <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+                    <tr><td>symbol</td><td>string</td><td>Trading pair e.g., "ETH/USDT"</td></tr>
+                    <tr><td>side</td><td>string</td><td>"buy" or "sell"</td></tr>
+                    <tr><td>type</td><td>string</td><td>"limit", "market", "stop_loss"</td></tr>
+                    <tr><td>quantity</td><td>float</td><td>Amount to trade</td></tr>
+                    <tr><td>price</td><td>float</td><td>Required for limit orders</td></tr>
+                </table>
+                <div class="code-block">
+                    <pre><code class="language-javascript">// JavaScript example
+fetch('https://api.chronostrade.io/v1/order', {
+  method: 'POST',
+  headers: { 'X-API-Key': 'your_key', 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    symbol: 'BTC/USDT',
+    side: 'buy',
+    type: 'limit',
+    quantity: 0.05,
+    price: 42500
+  })
+});</code></pre>
+                </div>
+            </div>
+
+            <!-- WebSocket -->
+            <div id="websocket" class="doc-section">
+                <h2><i class="fas fa-bolt"></i> WebSocket Streams</h2>
+                <p>Real-time market data with sub-millisecond updates. Connect to <code>wss://ws.chronostrade.io/v1/stream</code></p>
+                <div class="code-block">
+                    <pre><code class="language-javascript">// Subscribe to order book & trades
+const ws = new WebSocket('wss://ws.chronostrade.io/v1/stream?api_key=YOUR_KEY');
+ws.onopen = () => {
+  ws.send(JSON.stringify({
+    action: 'subscribe',
+    channels: ['trade.BTC/USDT', 'depth.BTC/USDT']
+  }));
+};
+ws.onmessage = (event) => console.log(JSON.parse(event.data));</code></pre>
+                </div>
+                <div class="note">Channels available: <code>trade</code>, <code>depth</code>, <code>ticker</code>, <code>kline_1m</code>, <code>kline_5m</code>, <code>l2_orderbook</code>.</div>
+            </div>
+
+            <!-- Scripting (Python/JS) -->
+            <div id="scripting" class="doc-section">
+                <h2><i class="fab fa-python"></i> Scripting Sandbox</h2>
+                <p>Build custom indicators, strategies, and trade automations using Python or JavaScript inside ChronosTrade desktop environment.</p>
+                <h3>Python Example — Custom Indicator</h3>
+                <div class="code-block">
+                    <pre><code class="language-python"># Custom RSI divergence detector
+from chronos import Context, MarketData
+
+def compute_divergence(data: MarketData):
+    prices = data.close[-20:]
+    rsi = calculate_rsi(prices)
+    if rsi[-1] < 30 and prices[-1] > prices[-5]:
+        Context.alert("Bullish divergence detected", symbol=data.symbol)
+        return {"signal": "buy", "confidence": 0.82}
+    return None</code></pre>
+                </div>
+                <h3>JavaScript Strategy — Auto Grid</h3>
+                <div class="code-block">
+                    <pre><code class="language-javascript">// Simple grid trading bot
+const { placeOrder, getBalance } = require('chronos-api');
+
+async function gridStrategy() {
+  const price = await getPrice('BTC/USDT');
+  const lower = 42000, upper = 44000;
+  if (price < lower && getBalance('USDT') > 1000) {
+    await placeOrder('BTC/USDT', 'buy', 0.01, 'market');
+    log('Grid buy executed');
+  }
+}</code></pre>
+                </div>
+                <div class="note"><i class="fas fa-terminal"></i> Scripts run in isolated VM with access to market data, order execution, and technical indicators library.</div>
+            </div>
+
+            <!-- Chronos Engine -->
+            <div id="chronos-engine" class="doc-section">
+                <h2><i class="fas fa-microchip"></i> Chronos Engine™ — Low-Latency Core</h2>
+                <p>The Chronos Engine is a kernel-bypass, hardware-accelerated matching and data distribution system.</p>
+                <ul>
+                    <li><i class="fas fa-clock"></i> <strong>Nanosecond timestamps</strong> — Precision synchronized via PTP</li>
+                    <li><i class="fas fa-chart-line"></i> <strong>Tick replay</strong> — Backtest with actual market microstructure</li>
+                    <li><i class="fas fa-tachometer-alt"></i> <strong>0.2ms</strong> order-to-execution for Pro users</li>
+                </ul>
+                <div class="code-block">
+                    <pre><code class="language-bash"># Chronos CLI command to test latency
+chronos-cli ping --exchange binance --count 1000</code></pre>
+                </div>
+            </div>
+
+            <!-- Code Examples -->
+            <div id="examples" class="doc-section">
+                <h2><i class="fas fa-chart-line"></i> Code Examples</h2>
+                <h3>Fetch OHLCV data & compute VWAP</h3>
+                <div class="code-block">
+                    <pre><code class="language-python">import requests
+import pandas as pd
+
+response = requests.get(
+    "https://api.chronostrade.io/v1/market/klines",
+    headers={"X-API-Key": "your_key"},
+    params={"symbol": "BTC/USDT", "interval": "5m", "limit": 100}
+)
+data = response.json()
+df = pd.DataFrame(data)
+vwap = (df['volume'] * df['close']).sum() / df['volume'].sum()
+print(f"VWAP: {vwap}")</code></pre>
+                </div>
+                <h3>Place OCO (One-Cancels-Other) order</h3>
+                <div class="code-block">
+                    <pre><code class="language-javascript">const ocoOrder = {
+  symbol: 'ETH/USDT',
+  side: 'buy',
+  takeProfit: 3200,
+  stopLoss: 2800,
+  quantity: 1.5
+};
+const response = await chronos.placeOCO(ocoOrder);
+console.log('OCO id:', response.orderId);</code></pre>
+                </div>
+            </div>
+
+            <!-- FAQ Docs -->
+            <div id="faq-docs" class="doc-section">
+                <h2><i class="fas fa-question-circle"></i> Developer FAQ</h2>
+                <div class="faq-item" style="margin-bottom:1rem;"><strong>Q: How do I get access to historical tick data?</strong><br>A: Use <code>/v1/market/historical-ticks</code> endpoint. Requires Pro plan or higher.</div>
+                <div class="faq-item" style="margin-bottom:1rem;"><strong>Q: Does ChronosTrade support FIX protocol?</strong><br>A: Yes, institutional plans include FIX 4.4 connectivity. Contact sales for credentials.</div>
+                <div class="faq-item"><strong>Q: Can I run my scripts 24/7 on cloud?</strong><br>A: Scripts run locally on your machine. For cloud deployment, use our REST API and scheduled tasks.</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p><i class="far fa-copyright"></i> 2026 ChronosTrade — Documentation v4.0. Open-source SDKs available on GitHub.</p>
+        <p><i class="fab fa-github"></i> github.com/chronostrade · <i class="fab fa-discord"></i> Discord · <i class="fab fa-twitter"></i> @ChronosDev</p>
+    </footer>
+</div>
+
+<script>
+    // particles
+    const container = document.getElementById('particleContainer');
+    for (let i = 0; i < 65; i++) {
+        const p = document.createElement('div');
+        p.classList.add('particle');
+        let size = Math.random() * 4 + 2;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = Math.random() * 100 + '%';
+        p.style.animationDuration = (12 + Math.random() * 20) + 's';
+        p.style.animationDelay = (Math.random() * 10) + 's';
+        p.style.opacity = Math.random() * 0.3 + 0.1;
+        container.appendChild(p);
+    }
+
+    // Toast notifications
+    function showToast(msg, isSuccess = true) {
+        const toast = document.createElement('div');
+        toast.innerText = msg;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '30px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.backgroundColor = isSuccess ? '#0a6c7c' : '#aa2e4e';
+        toast.style.color = '#fff';
+        toast.style.padding = '12px 28px';
+        toast.style.borderRadius = '40px';
+        toast.style.fontFamily = "'Space Grotesk', monospace";
+        toast.style.fontWeight = '500';
+        toast.style.backdropFilter = 'blur(12px)';
+        toast.style.zIndex = '9999';
+        toast.style.border = `1px solid ${isSuccess ? '#0ff' : '#ff7b9c'}`;
+        toast.style.boxShadow = '0 0 18px rgba(0,255,255,0.3)';
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 500);
+        }, 2800);
+    }
+
+    // Sidebar smooth scroll + active highlight
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    const sections = document.querySelectorAll('.doc-section');
+    function setActiveLink() {
+        let scrollPos = window.scrollY + 150;
+        sections.forEach(section => {
+            const id = section.getAttribute('id');
+            const offsetTop = section.offsetTop;
+            const offsetBottom = offsetTop + section.offsetHeight;
+            if (scrollPos >= offsetTop && scrollPos < offsetBottom) {
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active-doc');
+                    if (link.getAttribute('data-target') === id) {
+                        link.classList.add('active-doc');
+                    }
+                });
+            }
+        });
+    }
+    window.addEventListener('scroll', setActiveLink);
+    window.addEventListener('load', setActiveLink);
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('data-target');
+            const targetElem = document.getElementById(targetId);
+            if (targetElem) {
+                targetElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // Nav & buttons
+    const homeLink = document.getElementById('homeLink');
+    const featuresLink = document.getElementById('featuresLink');
+    const pricingLink = document.getElementById('pricingLink');
+    const docsLink = document.getElementById('docsLink');
+    const apiKeyBtn = document.getElementById('apiKeyBtn');
+    
+    if (homeLink) homeLink.addEventListener('click', (e) => { e.preventDefault(); showToast('🏠 Redirecting to ChronosTrade homepage', false); window.location.href = 'index.html'; });
+    if (featuresLink) featuresLink.addEventListener('click', (e) => { e.preventDefault(); showToast('✨ Explore platform features — AI, 0.2ms engine, and more', true); });
+    if (pricingLink) pricingLink.addEventListener('click', (e) => { e.preventDefault(); showToast('💰 View flexible pricing plans for every trader', true); });
+    if (docsLink) docsLink.addEventListener('click', (e) => { e.preventDefault(); showToast('📚 You are in the Developer Documentation section', true); });
+    if (apiKeyBtn) apiKeyBtn.addEventListener('click', () => { showToast('🔑 API key management — open ChronosTrade desktop → Settings → API', true); });
+    
+    // prism highlight after load
+    setTimeout(() => {
+        if (window.Prism) Prism.highlightAll();
+    }, 200);
+    console.log("%cChronosTrade Docs | Developer hub ready — API & scripting examples loaded", "color: #0ff; font-size: 14px");
+</script>
+</body>
+</html>

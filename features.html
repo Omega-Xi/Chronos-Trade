@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChronosTrade | Elite Trading Platform Features</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #05070c;
+            color: #eef5ff;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* animated gradient background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 30% 20%, #0a1428, #010308);
+        }
+        .animated-bg::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 60px,
+                rgba(0, 255, 255, 0.02) 60px,
+                rgba(0, 255, 255, 0.05) 120px
+            );
+            animation: driftMesh 8s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes driftMesh {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(8%, 6%) rotate(1deg); }
+        }
+
+        /* floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            background: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 10px #0ff;
+            border-radius: 50%;
+            animation: floatParticle 14s infinite alternate ease-in-out;
+        }
+        @keyframes floatParticle {
+            0% { transform: translateY(0px) translateX(0px); opacity: 0.1; }
+            100% { transform: translateY(-70px) translateX(35px); opacity: 0.5; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.25);
+            backdrop-filter: blur(4px);
+        }
+        .logo {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .chronos-icon {
+            display: inline-flex;
+            width: 32px;
+            height: 32px;
+            background: radial-gradient(circle at 30% 30%, #0ff, #005f73);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 8px cyan;
+        }
+        .chronos-icon::after {
+            content: "⚡";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            color: white;
+        }
+        .nav-links a {
+            color: #ccddf8;
+            margin-left: 2rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: #0ff;
+            text-shadow: 0 0 5px #0ff;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #0ff;
+            padding: 0.7rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #0ff;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn-outline:hover {
+            background: #0ff22a20;
+            box-shadow: 0 0 12px #0ff;
+        }
+
+        /* features hero */
+        .features-hero {
+            text-align: center;
+            margin: 4rem 0 3rem;
+        }
+        .badge {
+            background: rgba(0, 255, 255, 0.15);
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            backdrop-filter: blur(4px);
+            border: 0.5px solid rgba(0,255,255,0.4);
+            margin-bottom: 1.5rem;
+        }
+        .features-hero h1 {
+            font-size: 3.8rem;
+            font-weight: 800;
+            background: linear-gradient(125deg, #fff, #7ffbff, #0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1.2rem;
+        }
+        .features-hero p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: #b8ceff;
+            font-size: 1.2rem;
+        }
+
+        /* feature category */
+        .feature-category {
+            margin-bottom: 5rem;
+        }
+        .category-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-left: 4px solid #0ff;
+            padding-left: 1rem;
+        }
+        .category-title i {
+            color: #0ff;
+            font-size: 2rem;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+        }
+        .feature-card {
+            background: rgba(8, 18, 30, 0.65);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 2rem 1.8rem;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.08), transparent);
+            transition: left 0.6s;
+        }
+        .feature-card:hover::before {
+            left: 100%;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: #0ff;
+            box-shadow: 0 20px 35px -12px rgba(0, 255, 255, 0.25);
+        }
+        .feature-icon {
+            font-size: 2.6rem;
+            color: #0ff;
+            margin-bottom: 1.2rem;
+        }
+        .feature-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+        .feature-card p {
+            color: #bbd1f0;
+            margin-bottom: 1.2rem;
+        }
+        .feature-tag {
+            display: inline-block;
+            background: rgba(0,255,255,0.12);
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #0ff;
+        }
+        .spec-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        .spec-list li {
+            font-size: 0.85rem;
+            margin: 0.4rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: monospace;
+        }
+        .spec-list i {
+            font-size: 0.7rem;
+            color: #0ff;
+        }
+
+        /* comparison table */
+        .comparison {
+            background: rgba(2, 12, 22, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 2rem;
+            margin: 3rem 0 5rem;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        .comparison h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        .comp-table th, .comp-table td {
+            padding: 1rem 1rem;
+            border-bottom: 1px solid rgba(0,255,255,0.2);
+        }
+        .comp-table th {
+            color: #0ff;
+            font-weight: 600;
+        }
+        .comp-table td i.fa-check-circle {
+            color: #0ff;
+        }
+        .comp-table td i.fa-times-circle {
+            color: #ff5577;
+        }
+
+        .cta-feature {
+            text-align: center;
+            background: linear-gradient(135deg, #02121f, #000a14);
+            border-radius: 48px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            border: 1px solid #0ff33a40;
+        }
+        .btn-primary {
+            background: linear-gradient(95deg, #0b2b3b, #0a6c7c);
+            border: 1px solid rgba(0, 255, 255, 0.6);
+            padding: 0.9rem 2.4rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px #0ff;
+        }
+        footer {
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+            padding: 2rem 0;
+            text-align: center;
+            color: #8ba0bc;
+        }
+        @media (max-width: 800px) {
+            .container { padding: 0 1.2rem; }
+            .features-hero h1 { font-size: 2.4rem; }
+            .category-title { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="animated-bg"></div>
+<div class="particles" id="particleContainer"></div>
+
+<div class="container">
+    <nav class="navbar">
+        <div class="logo">
+            <span class="chronos-icon"></span> ChronosTrade
+        </div>
+        <div class="nav-links">
+            <a href="#" id="homeLink">Home</a>
+            <a href="#" class="active" id="featuresLink">Features</a>
+            <a href="#" id="pricingLink">Pricing</a>
+            <a href="#" id="docsLink">Docs</a>
+            <a href="#" id="downloadLink">Download</a>
+        </div>
+        <div><button class="btn-outline" id="earlyAccessBtn">Get Early Access →</button></div>
+    </nav>
+
+    <div class="features-hero">
+        <div class="badge"><i class="fas fa-microchip"></i> Chronos Engine v4.0 — Quantum Ready</div>
+        <h1>Built for precision. <br>Engineered for speed.</h1>
+        <p>Discover the most advanced retail trading platform with institutional-grade tooling, AI-driven analytics, and sub-millisecond execution.</p>
+    </div>
+
+    <!-- Core performance section -->
+    <div class="feature-category">
+        <div class="category-title">
+            <i class="fas fa-bolt"></i>
+            <span>Performance & Execution</span>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <h3>Sub‑millisecond Core</h3>
+                <p>Hardware-accelerated matching engine with 0.2ms average latency — bypasses OS network stack via kernel bypass.</p>
+                <span class="feature-tag">FPGA ready</span>
+                <ul class="spec-list">
+                    <li><i class="fas fa-chart-line"></i> 500K orders/sec throughput</li>
+                    <li><i class="fas fa-clock"></i> Nanosecond timestamping</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-waveform"></i></div>
+                <h3>Chronos Engine™</h3>
+                <p>Proprietary tick-level replay system with zero drift. Backtest years of data in minutes with actual market microstructure.</p>
+                <span class="feature-tag">Tick precision</span>
+                <ul class="spec-list">
+                    <li><i class="fas fa-chart-simple"></i> Historical tick database</li>
+                    <li><i class="fas fa-sync-alt"></i> Real-time synchronization</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <h3>Co-location Ready</h3>
+                <p>Connect directly to major exchange gateways via low-latency fiber. Dedicated cross-connect options for institutions.</p>
+                <span class="feature-tag">Pro & Institutional</span>
+                <ul class="spec-list">
+                    <li><i class="fas fa-server"></i> 8 global POPs</li>
+                    <li><i class="fas fa-shield"></i> 99.999% uptime SLA</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI & analytics -->
+    <div class="feature-category">
+        <div class="category-title">
+            <i class="fas fa-brain"></i>
+            <span>AI & Predictive Intelligence</span>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                <h3>Neural Market Scanner</h3>
+                <p>Transformer + LSTM hybrid models trained on order book & tick data. Live regime detection and directional probabilities.</p>
+                <span class="feature-tag">On‑device inference</span>
+                <ul class="spec-list">
+                    <li><i class="fas fa-chart-pie"></i> 85% pattern accuracy (backtest)</li>
+                    <li><i class="fas fa-bell"></i> Real-time anomaly alerts</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Adaptive Algo Suite</h3>
+                <p>Pre-built smart algos: TWAP, VWAP, Iceberg, Sniping. Customize with integrated Python/JS scripting sandbox.</p>
+                <span class="feature-tag">No‑code logic</span>
+                <ul class="spec-list">
+                    <li><i class="fas fa-code-branch"></i> 50+ built-in indicators</li>
+                    <li><i class="fas fa-chart-scatter"></i> AI dynamic slippage model</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-eye"></i></div>
+                <h3>Sentiment Fusion</h3>
+                <p>Aggregate news, social media, and on-chain metrics into actionable trade signals with natural language processing.</p>
+                <span class="feature-tag">Alternative data</span>
+                <ul class="spec-list">
+                    <li><i class="fab fa-twitter"></i> Real-time sentiment score</li>
+                    <li><i class="fas fa-newspaper"></i> Event-driven triggers</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- security & infrastructure -->
+    <div class="feature-category">
+        <div class="category-title">
+            <i class="fas fa-shield-alt"></i>
+            <span>Bank-Grade Security & Infrastructure</span>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fac fa-fingerprint"></i></div>
+                <h3>Biometric MFA + HSM</h3>
+                <p>Hardware security module integration, encrypted RAM, and biometric authentication (fingerprint/face ID).</p>
+                <span class="feature-tag">FIPS 140-2</span>
+                <ul class="spec-list">
+                    <li><i class="fas fa-microchip"></i> TPM 2.0 support</li>
+                    <li><i class="fas fa-lock"></i> Encrypted order routing</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-wallet"></i></div>
+                <h3>Hardware Wallet Integration</h3>
+                <p>Native support for Ledger, Trezor, and institutional custody solutions. Sign transactions without exposing private keys.</p>
+                <span class="feature-tag">Cold storage ready</span>
+                <ul class="spec-list">
+                    <li><i class="fas fa-plug"></i> One-click sign & trade</li>
+                    <li><i class="fas fa-shield-virus"></i> Whitelist withdrawal policies</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-chart-network"></i></div>
+                <h3>Private Order Flow</h3>
+                <p>End-to-end encrypted orders with anti-frontrunning protection. Optional smart order routing to dark pools.</p>
+                <span class="feature-tag">Institutional</span>
+                <ul class="spec-list">
+                    <li><i class="fas fa-mask"></i> No order book leakage</li>
+                    <li><i class="fas fa-handshake"></i> Direct market access</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- visualization & customization -->
+    <div class="feature-category">
+        <div class="category-title">
+            <i class="fas fa-desktop"></i>
+            <span>Professional Interface & Visualization</span>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-chart-simple"></i></div>
+                <h3>Multi‑Monitor HUD</h3>
+                <p>Modular, pixel-perfect layout with unlimited workspaces. Sync across multiple screens with zero latency.</p>
+                <span class="feature-tag">Fully customizable</span>
+                <ul class="spec-list">
+                    <li><i class="fas fa-chart-gantt"></i> Depth of Market (DOM) heatmap</li>
+                    <li><i class="fas fa-draw-polygon"></i> 70+ drawing tools</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Advanced Charting Suite</h3>
+                <p>Lightning-fast WebGL rendering, 50+ indicators, time-sales & volume profile, custom timeframes, and alerts.</p>
+                <span class="feature-tag">TradingView parity+</span>
+                <ul class="spec-list">
+                    <li><i class="fas fa-chart-area"></i> Footprint & delta charts</li>
+                    <li><i class="fas fa-calculator"></i> Strategy backtester integrated</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-terminal"></i></div>
+                <h3>Scripting Sandbox</h3>
+                <p>Build custom indicators, strategies, and trade automations using Python or JavaScript. Native API access to market data.</p>
+                <span class="feature-tag">Dev environment</span>
+                <ul class="spec-list">
+                    <li><i class="fas fa-code"></i> Built-in IDE & debugger</li>
+                    <li><i class="fas fa-chart-line"></i> Live strategy optimization</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- comparison table: standard vs pro vs institution -->
+    <div class="comparison">
+        <h2><i class="fas fa-chart-simple"></i> Feature comparison</h2>
+        <table class="comp-table">
+            <thead>
+                <tr><th>Capability</th><th>Explorer</th><th>Pro Trader</th><th>Institutional</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Execution latency</td><td>~1ms</td><td><i class="fas fa-check-circle"></i> 0.2ms</td><td><i class="fas fa-check-circle"></i> <0.1ms (co-lo)</td></tr>
+                <tr><td>AI predictive signals</td><td>Basic</td><td><i class="fas fa-check-circle"></i> Full LSTM+Transformer</td><td><i class="fas fa-check-circle"></i> Custom models</td></tr>
+                <tr><td>Custom scripting (Python/JS)</td><td><i class="fas fa-check-circle"></i></td><td><i class="fas fa-check-circle"></i> Advanced sandbox</td><td><i class="fas fa-check-circle"></i> Unlimited + API</td></tr>
+                <tr><td>Hardware wallet support</td><td><i class="fas fa-check-circle"></i></td><td><i class="fas fa-check-circle"></i></td><td><i class="fas fa-check-circle"></i> Institutional custody</td></tr>
+                <tr><td>Dedicated account manager</td><td><i class="fas fa-times-circle"></i></td><td><i class="fas fa-times-circle"></i></td><td><i class="fas fa-check-circle"></i> 24/7 priority</td></tr>
+                <tr><td>Co-location & cross-connects</td><td>—</td><td>—</td><td><i class="fas fa-check-circle"></i> Full access</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Call to action -->
+    <div class="cta-feature">
+        <h2 style="font-size: 2rem;">Experience the Chronos advantage</h2>
+        <p style="margin: 1rem auto; max-width: 550px;">Join elite traders who reduced latency by 78% and improved win rate with AI execution.</p>
+        <button class="btn-primary" id="featuresCtaBtn">⚡ Start 14‑day Pro trial</button>
+        <p style="margin-top: 1rem; font-size: 0.8rem;">No credit card required · Full access to all Pro tools</p>
+    </div>
+
+    <footer>
+        <p><i class="far fa-copyright"></i> 2026 ChronosTrade — precision timing lab. All trademarks property of their respective owners.</p>
+        <p style="margin-top: 0.5rem;"><i class="fab fa-discord"></i> Discord · <i class="fab fa-twitter"></i> @ChronosTrade · <i class="fab fa-github"></i> Developer Portal</p>
+    </footer>
+</div>
+
+<script>
+    // particle system
+    function createParticles() {
+        const container = document.getElementById('particleContainer');
+        for (let i = 0; i < 70; i++) {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            const size = Math.random() * 5 + 2;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.animationDuration = (9 + Math.random() * 18) + 's';
+            p.style.animationDelay = (Math.random() * 12) + 's';
+            p.style.opacity = Math.random() * 0.4 + 0.1;
+            container.appendChild(p);
+        }
+    }
+    createParticles();
+
+    // Interactive toasts and navigation
+    function showToast(message, isSuccess = true) {
+        const toast = document.createElement('div');
+        toast.innerText = message;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '30px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.backgroundColor = isSuccess ? '#0a6c7c' : '#aa2e4e';
+        toast.style.color = 'white';
+        toast.style.padding = '12px 28px';
+        toast.style.borderRadius = '40px';
+        toast.style.fontFamily = "'Space Grotesk', monospace";
+        toast.style.fontWeight = '500';
+        toast.style.backdropFilter = 'blur(12px)';
+        toast.style.zIndex = '9999';
+        toast.style.border = `1px solid ${isSuccess ? '#0ff' : '#ff7b9c'}`;
+        toast.style.boxShadow = '0 0 18px rgba(0,255,255,0.3)';
+        toast.style.fontSize = '0.9rem';
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 500);
+        }, 2800);
+    }
+
+    // Buttons
+    const earlyBtn = document.getElementById('earlyAccessBtn');
+    const featuresCta = document.getElementById('featuresCtaBtn');
+    if (earlyBtn) earlyBtn.addEventListener('click', () => showToast('🚀 Early access reserved! Check your inbox for private beta invite.', true));
+    if (featuresCta) featuresCta.addEventListener('click', () => showToast('⚡ Your 14-day Pro trial is ready. Launching ChronosTrade setup...', true));
+
+    // all pricing / CTA triggers
+    const allPriceTriggers = document.querySelectorAll('.btn-primary, .btn-outline');
+    allPriceTriggers.forEach(btn => {
+        if (btn.id !== 'featuresCtaBtn' && btn.id !== 'earlyAccessBtn') {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                showToast('📊 Secure checkout — Pro plan includes 0.2ms core and AI suite.', true);
+            });
+        }
+    });
+
+    // Nav links with redirection simulation
+    const homeLink = document.getElementById('homeLink');
+    const featuresLink = document.getElementById('featuresLink');
+    const pricingLink = document.getElementById('pricingLink');
+    const docsLink = document.getElementById('docsLink');
+    const downloadLink = document.getElementById('downloadLink');
+    
+    if (homeLink) homeLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showToast('🏠 Redirecting to ChronosTrade homepage (full dashboard coming soon).', true);
+        setTimeout(() => window.location.href = 'index.html', 800);
+    });
+    if (featuresLink) featuresLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showToast('✨ You are already on the advanced Features page.', false);
+    });
+    if (pricingLink) pricingLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showToast('💰 View our pricing plans: Explorer $29/mo | Pro $79/mo | Custom institutional.', true);
+        setTimeout(() => window.location.href = 'pricing.html', 800);
+    });
+    if (docsLink) docsLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showToast('📚 Developer documentation — API references, WebSocket streams, and Chronos scripting guide.', true);
+    });
+    if (downloadLink) downloadLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showToast('📥 Download page — Get the latest version of ChronosTrade for your platform.', true);
+    });
+
+    // Interactive additional hover effect for comparison rows
+    const tableRows = document.querySelectorAll('.comp-table tr');
+    tableRows.forEach(row => {
+        row.addEventListener('mouseenter', () => {
+            row.style.backgroundColor = 'rgba(0, 255, 255, 0.05)';
+            row.style.transition = '0.2s';
+        });
+        row.addEventListener('mouseleave', () => {
+            row.style.backgroundColor = 'transparent';
+        });
+    });
+
+    // animated gradient on category hover? just for fun
+    const categories = document.querySelectorAll('.feature-category');
+    categories.forEach(cat => {
+        cat.addEventListener('mouseenter', () => {
+            const title = cat.querySelector('.category-title');
+            if (title) title.style.textShadow = '0 0 6px cyan';
+        });
+        cat.addEventListener('mouseleave', () => {
+            const title = cat.querySelector('.category-title');
+            if (title) title.style.textShadow = 'none';
+        });
+    });
+
+    // console badge
+    console.log("%cChronosTrade Features | Elite performance stack active", "color: #0ff; font-size: 15px; font-weight: bold;");
+    
+    // simulate background animation sync
+    setInterval(() => {
+        const heroBadge = document.querySelector('.badge');
+        if (heroBadge) {
+            heroBadge.style.borderColor = '#0ff';
+            setTimeout(() => { if(heroBadge) heroBadge.style.borderColor = 'rgba(0, 255, 255, 0.4)'; }, 300);
+        }
+    }, 2000);
+</script>
+</body>
+</html>

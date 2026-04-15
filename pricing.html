@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChronosTrade | Pricing — Plans for Every Trader</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #05070c;
+            color: #eef5ff;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* animated cyberpunk background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 70% 20%, #0a1428, #010308);
+        }
+        .animated-bg::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 55px,
+                rgba(0, 255, 255, 0.02) 55px,
+                rgba(0, 255, 255, 0.05) 110px
+            );
+            animation: driftPattern 12s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes driftPattern {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(9%, 7%) rotate(1.5deg); }
+        }
+
+        /* particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            background: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 10px #0ff;
+            border-radius: 50%;
+            animation: floatParticle 15s infinite alternate ease-in-out;
+        }
+        @keyframes floatParticle {
+            0% { transform: translateY(0px) translateX(0px); opacity: 0.1; }
+            100% { transform: translateY(-90px) translateX(45px); opacity: 0.55; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.25);
+            backdrop-filter: blur(4px);
+        }
+        .logo {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .chronos-icon {
+            display: inline-flex;
+            width: 34px;
+            height: 34px;
+            background: radial-gradient(circle at 30% 30%, #0ff, #005f73);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 10px cyan;
+        }
+        .chronos-icon::after {
+            content: "⌛";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            color: white;
+        }
+        .nav-links a {
+            color: #ccddf8;
+            margin-left: 2rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: #0ff;
+            text-shadow: 0 0 6px #0ff;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #0ff;
+            padding: 0.7rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #0ff;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn-outline:hover {
+            background: #0ff22a20;
+            box-shadow: 0 0 14px #0ff;
+        }
+
+        /* pricing header */
+        .pricing-header {
+            text-align: center;
+            margin: 3.5rem 0 2rem;
+        }
+        .badge {
+            background: rgba(0, 255, 255, 0.12);
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            backdrop-filter: blur(4px);
+            border: 0.5px solid rgba(0,255,255,0.5);
+            margin-bottom: 1.5rem;
+        }
+        .pricing-header h1 {
+            font-size: 3.8rem;
+            font-weight: 800;
+            background: linear-gradient(125deg, #fff, #7ffbff, #0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+        .pricing-header p {
+            max-width: 680px;
+            margin: 0 auto;
+            color: #bbd4ff;
+            font-size: 1.2rem;
+        }
+
+        /* toggle switch for billing */
+        .billing-toggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.2rem;
+            margin: 2rem 0 2.5rem;
+        }
+        .toggle-option {
+            font-weight: 500;
+            color: #b0caf5;
+        }
+        .toggle-option.active {
+            color: #0ff;
+            text-shadow: 0 0 2px cyan;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #1e2a3a;
+            transition: 0.3s;
+            border-radius: 34px;
+            border: 1px solid #0ff;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 3px;
+            bottom: 2px;
+            background-color: #0ff;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider:before {
+            transform: translateX(28px);
+        }
+        .save-badge {
+            background: #0a6c7c;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            margin-left: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* pricing cards grid */
+        .pricing-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+        }
+        .price-card {
+            background: rgba(8, 18, 30, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 2rem 1.8rem;
+            width: 330px;
+            border: 1px solid rgba(0, 255, 255, 0.25);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .price-card.popular {
+            border: 2px solid #0ff;
+            box-shadow: 0 0 28px rgba(0, 255, 255, 0.35);
+            transform: scale(1.02);
+            background: rgba(12, 28, 42, 0.85);
+        }
+        .price-card:hover {
+            transform: translateY(-10px);
+            border-color: #0ff;
+        }
+        .popular-badge {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: #0ff;
+            color: #010308;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 40px;
+        }
+        .card-icon {
+            font-size: 2.4rem;
+            color: #0ff;
+            margin-bottom: 1rem;
+        }
+        .price-card h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .price-display {
+            margin: 1.2rem 0;
+        }
+        .price-amount {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #0ff;
+            line-height: 1;
+        }
+        .price-period {
+            font-size: 1rem;
+            color: #9bb5e0;
+        }
+        .description {
+            color: #bdd2ff;
+            margin: 0.8rem 0 1.5rem;
+            font-size: 0.9rem;
+        }
+        .feature-list {
+            list-style: none;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+        .feature-list li {
+            margin: 0.8rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 0.9rem;
+        }
+        .feature-list li i.fa-check-circle {
+            color: #0ff;
+            width: 20px;
+        }
+        .feature-list li i.fa-times-circle {
+            color: #ff6680;
+        }
+        .btn-plan {
+            width: 100%;
+            padding: 0.9rem;
+            border-radius: 60px;
+            font-weight: 700;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn-primary-plan {
+            background: linear-gradient(95deg, #0b2b3b, #0a6c7c);
+            border: 1px solid #0ff;
+            color: white;
+        }
+        .btn-primary-plan:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 18px #0ff;
+        }
+        .btn-outline-plan {
+            background: transparent;
+            border: 1px solid #0ff;
+            color: #0ff;
+        }
+        .btn-outline-plan:hover {
+            background: #0ff22a20;
+            box-shadow: 0 0 12px #0ff;
+        }
+
+        /* enterprise section */
+        .enterprise-section {
+            background: linear-gradient(135deg, #02131f, #000d1a);
+            border-radius: 48px;
+            padding: 2.5rem;
+            margin: 3rem 0 4rem;
+            text-align: center;
+            border: 1px solid rgba(0,255,255,0.3);
+        }
+        .enterprise-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .contact-sales {
+            margin-top: 1.5rem;
+        }
+        /* faq section */
+        .faq-section {
+            margin: 4rem 0;
+        }
+        .faq-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+        }
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .faq-item {
+            background: rgba(6, 16, 26, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            padding: 1.5rem;
+            border-left: 3px solid #0ff;
+        }
+        .faq-item h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .faq-item p {
+            color: #bbd0f0;
+            font-size: 0.9rem;
+        }
+        footer {
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+            padding: 2rem 0;
+            text-align: center;
+            color: #8ba0bc;
+        }
+        @media (max-width: 750px) {
+            .container { padding: 0 1.2rem; }
+            .pricing-header h1 { font-size: 2.5rem; }
+            .price-card { width: 100%; max-width: 380px; }
+        }
+    </style>
+</head>
+<body>
+<div class="animated-bg"></div>
+<div class="particles" id="particleContainer"></div>
+
+<div class="container">
+    <nav class="navbar">
+        <div class="logo">
+            <span class="chronos-icon"></span> ChronosTrade
+        </div>
+        <div class="nav-links">
+            <a href="#" id="homeLink">Home</a>
+            <a href="#" id="featuresLink">Features</a>
+            <a href="#" class="active" id="pricingLink">Pricing</a>
+            <a href="#" id="docsLink">Docs</a>
+            <a href="#" id="downloadLink">Download</a>
+        </div>
+        <div><button class="btn-outline" id="earlyAccessBtn">Early Access →</button></div>
+    </nav>
+
+    <div class="pricing-header">
+        <div class="badge"><i class="fas fa-tags"></i> Transparent pricing · No hidden fees</div>
+        <h1>Plans built for <span style="color:#0ff;">speed & scale</span></h1>
+        <p>From retail quants to institutional players, choose the plan that matches your trading edge. Upgrade or downgrade anytime.</p>
+    </div>
+
+    <!-- Billing Toggle (monthly/yearly) -->
+    <div class="billing-toggle">
+        <span class="toggle-option active" id="monthlyLabel">Monthly</span>
+        <label class="switch">
+            <input type="checkbox" id="billingSwitch">
+            <span class="slider"></span>
+        </label>
+        <span class="toggle-option" id="yearlyLabel">Yearly <span class="save-badge">Save 20%</span></span>
+    </div>
+
+    <div class="pricing-grid" id="pricingCardsContainer">
+        <!-- Explorer Card -->
+        <div class="price-card" data-plan="explorer">
+            <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+            <h3>Explorer</h3>
+            <div class="price-display">
+                <span class="price-amount" id="explorerPrice">$29</span>
+                <span class="price-period" id="explorerPeriod">/month</span>
+            </div>
+            <p class="description">Essential tools for active retail traders.</p>
+            <ul class="feature-list">
+                <li><i class="fas fa-check-circle"></i> Core execution engine (1ms latency)</li>
+                <li><i class="fas fa-check-circle"></i> 5 chart layouts, 30+ indicators</li>
+                <li><i class="fas fa-check-circle"></i> Real-time market data</li>
+                <li><i class="fas fa-check-circle"></i> Community scripts & indicators</li>
+                <li><i class="fas fa-times-circle"></i> AI predictive models</li>
+                <li><i class="fas fa-times-circle"></i> Custom scripting sandbox</li>
+            </ul>
+            <button class="btn-plan btn-outline-plan" data-plan-action="explorer">Start Explorer</button>
+        </div>
+
+        <!-- Pro Trader Card (Popular) -->
+        <div class="price-card popular" data-plan="pro">
+            <div class="popular-badge"><i class="fas fa-crown"></i> MOST POPULAR</div>
+            <div class="card-icon"><i class="fas fa-microchip"></i></div>
+            <h3>Pro Trader</h3>
+            <div class="price-display">
+                <span class="price-amount" id="proPrice">$79</span>
+                <span class="price-period" id="proPeriod">/month</span>
+            </div>
+            <p class="description">Sub-millisecond edge + AI market intelligence.</p>
+            <ul class="feature-list">
+                <li><i class="fas fa-check-circle"></i> <strong>0.2ms</strong> low-latency execution</li>
+                <li><i class="fas fa-check-circle"></i> LSTM + Transformer AI signals</li>
+                <li><i class="fas fa-check-circle"></i> Full Python/JS scripting sandbox</li>
+                <li><i class="fas fa-check-circle"></i> Advanced order types (Iceberg, TWAP)</li>
+                <li><i class="fas fa-check-circle"></i> Real-time sentiment scanner</li>
+                <li><i class="fas fa-check-circle"></i> Priority support & webhooks</li>
+            </ul>
+            <button class="btn-plan btn-primary-plan" data-plan-action="pro">Start Pro Trial →</button>
+        </div>
+
+        <!-- Institutional Card -->
+        <div class="price-card" data-plan="inst">
+            <div class="card-icon"><i class="fas fa-building"></i></div>
+            <h3>Institutional</h3>
+            <div class="price-display">
+                <span class="price-amount" id="instPrice">Custom</span>
+                <span class="price-period"></span>
+            </div>
+            <p class="description">Tailored for funds, market makers & exchanges.</p>
+            <ul class="feature-list">
+                <li><i class="fas fa-check-circle"></i> Co-location & cross-connects</li>
+                <li><i class="fas fa-check-circle"></i> Dedicated hardware (FPGA ready)</li>
+                <li><i class="fas fa-check-circle"></i> On-premise / private cloud deployment</li>
+                <li><i class="fas fa-check-circle"></i> Custom risk & compliance modules</li>
+                <li><i class="fas fa-check-circle"></i> 24/7 VIP account team</li>
+                <li><i class="fas fa-check-circle"></i> Full API & FIX connectivity</li>
+            </ul>
+            <button class="btn-plan btn-outline-plan" data-plan-action="inst">Contact sales</button>
+        </div>
+    </div>
+
+    <!-- Enterprise addon section -->
+    <div class="enterprise-section">
+        <i class="fas fa-chart-network" style="font-size: 2.5rem; color:#0ff;"></i>
+        <h2>Need a custom deployment?</h2>
+        <p>Volume discounts, white-label solutions, and dedicated infrastructure for hedge funds and trading desks.</p>
+        <div class="contact-sales">
+            <button class="btn-primary-plan" id="enterpriseContactBtn" style="padding: 0.9rem 2rem;">📞 Talk to our team</button>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+        <div class="faq-title">Frequently asked questions</div>
+        <div class="faq-grid">
+            <div class="faq-item"><h4><i class="fas fa-rocket"></i> Can I upgrade later?</h4><p>Yes — you can switch between plans anytime. Upgrade to Pro for AI features, or request institutional demo.</p></div>
+            <div class="faq-item"><h4><i class="fas fa-chart-line"></i> Is there a free trial?</h4><p>Absolutely. Get 14 days of Pro Trader features, no credit card required. Full access to low-latency engine.</p></div>
+            <div class="faq-item"><h4><i class="fas fa-globe"></i> Which exchanges are supported?</h4><p>Binance, Coinbase, Bybit, Kraken, FTX (read-only), plus 15+ brokers via API bridge.</p></div>
+            <div class="faq-item"><h4><i class="fas fa-lock"></i> Is my strategy data private?</h4><p>All scripts run locally. No cloud sharing. Institutional plans offer hardware encryption modules.</p></div>
+        </div>
+    </div>
+
+    <footer>
+        <p><i class="far fa-copyright"></i> 2026 ChronosTrade — precision timing lab. All plans include access to core platform updates.</p>
+        <p style="margin-top: 0.5rem;"><i class="fab fa-discord"></i> Discord · <i class="fab fa-twitter"></i> @ChronosTrade · <i class="fab fa-github"></i> API docs</p>
+    </footer>
+</div>
+
+<script>
+    // particles background
+    function initParticles() {
+        const container = document.getElementById('particleContainer');
+        for (let i = 0; i < 80; i++) {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            const s = Math.random() * 5 + 2;
+            p.style.width = s + 'px';
+            p.style.height = s + 'px';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.animationDuration = (10 + Math.random() * 20) + 's';
+            p.style.animationDelay = (Math.random() * 14) + 's';
+            p.style.opacity = Math.random() * 0.45 + 0.1;
+            container.appendChild(p);
+        }
+    }
+    initParticles();
+
+    // Toast notifications
+    function showToast(msg, isSuccess = true) {
+        const toast = document.createElement('div');
+        toast.innerText = msg;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '30px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.backgroundColor = isSuccess ? '#0a6c7c' : '#aa2e4e';
+        toast.style.color = '#fff';
+        toast.style.padding = '12px 28px';
+        toast.style.borderRadius = '40px';
+        toast.style.fontFamily = "'Space Grotesk', monospace";
+        toast.style.fontWeight = '500';
+        toast.style.backdropFilter = 'blur(12px)';
+        toast.style.zIndex = '9999';
+        toast.style.border = `1px solid ${isSuccess ? '#0ff' : '#ff7b9c'}`;
+        toast.style.boxShadow = '0 0 18px rgba(0,255,255,0.3)';
+        toast.style.fontSize = '0.9rem';
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 500);
+        }, 2800);
+    }
+
+    // Billing toggle logic
+    const billingSwitch = document.getElementById('billingSwitch');
+    const monthlyLabel = document.getElementById('monthlyLabel');
+    const yearlyLabel = document.getElementById('yearlyLabel');
+    const explorerPriceSpan = document.getElementById('explorerPrice');
+    const proPriceSpan = document.getElementById('proPrice');
+    const explorerPeriod = document.getElementById('explorerPeriod');
+    const proPeriod = document.getElementById('proPeriod');
+
+    function updatePrices(isYearly) {
+        if (isYearly) {
+            explorerPriceSpan.innerText = '$23';
+            proPriceSpan.innerText = '$63';
+            explorerPeriod.innerText = '/month (billed yearly)';
+            proPeriod.innerText = '/month (billed yearly)';
+            monthlyLabel.classList.remove('active');
+            yearlyLabel.classList.add('active');
+        } else {
+            explorerPriceSpan.innerText = '$29';
+            proPriceSpan.innerText = '$79';
+            explorerPeriod.innerText = '/month';
+            proPeriod.innerText = '/month';
+            yearlyLabel.classList.remove('active');
+            monthlyLabel.classList.add('active');
+        }
+    }
+
+    billingSwitch.addEventListener('change', (e) => {
+        updatePrices(e.target.checked);
+        const planType = e.target.checked ? 'yearly' : 'monthly';
+        showToast(`Switched to ${planType === 'yearly' ? 'yearly billing (save 20%)' : 'monthly billing'}`, true);
+    });
+
+    // Button interactions for pricing cards
+    const allPlanBtns = document.querySelectorAll('[data-plan-action]');
+    allPlanBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const plan = btn.getAttribute('data-plan-action');
+            if (plan === 'explorer') {
+                showToast('🚀 Explorer plan selected: redirecting to secure checkout (starting at $29/mo).', true);
+            } else if (plan === 'pro') {
+                showToast('⚡ Pro Trader 14-day trial activated! Check your email to download ChronosTrade.', true);
+            } else if (plan === 'inst') {
+                showToast('🏢 Institutional inquiry: our team will reach out within 2 hours with custom pricing.', true);
+            }
+        });
+    });
+
+    const enterpriseBtn = document.getElementById('enterpriseContactBtn');
+    if (enterpriseBtn) {
+        enterpriseBtn.addEventListener('click', () => {
+            showToast('📧 Custom deployment request sent. Expect a dedicated solution architect shortly.', true);
+        });
+    }
+
+    // Nav links simulation
+    const homeLink = document.getElementById('homeLink');
+    const featuresLink = document.getElementById('featuresLink');
+    const pricingLink = document.getElementById('pricingLink');
+    const docsLink = document.getElementById('docsLink');
+    const downloadLink = document.getElementById('downloadLink');
+    const earlyBtn = document.getElementById('earlyAccessBtn');
+
+    if (homeLink) homeLink.addEventListener('click', (e) => { e.preventDefault(); showToast('🏠 Returning to homepage (dashboard preview).', true); setTimeout(() => window.location.href = 'index.html', 800); });
+    if (featuresLink) featuresLink.addEventListener('click', (e) => { e.preventDefault(); showToast('✨ Explore our bleeding-edge features: AI, 0.2ms engine, scripting.', true); setTimeout(() => window.location.href = 'features.html', 800); });
+    if (pricingLink) pricingLink.addEventListener('click', (e) => { e.preventDefault(); showToast('💰 You are on the Pricing page — choose your perfect plan.', false); });
+    if (docsLink) docsLink.addEventListener('click', (e) => { e.preventDefault(); showToast('📘 ChronosTrade API docs & scripting guide — available for Pro+ users.', true); });
+    if (downloadLink) downloadLink.addEventListener('click', (e) => { e.preventDefault(); showToast('📥 Download page — Get the latest version of ChronosTrade for your platform.', true); });
+    if (earlyBtn) earlyBtn.addEventListener('click', () => { showToast('🔓 Early access code sent! Private beta includes Pro features for 30 days.', true); });
+
+    // Hover effect for faq items and cards
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        item.addEventListener('mouseenter', () => { item.style.transform = 'translateX(6px)'; item.style.transition = '0.2s'; });
+        item.addEventListener('mouseleave', () => { item.style.transform = 'translateX(0)'; });
+    });
+
+    // price-card hover extra glow
+    const priceCards = document.querySelectorAll('.price-card');
+    priceCards.forEach(card => {
+        card.addEventListener('mouseenter', () => { card.style.transition = 'all 0.25s ease'; });
+    });
+    
+    // console branding
+    console.log("%cChronosTrade Pricing Engine | Billing toggle & dynamic offers ready", "color: #0ff; font-size: 14px; font-weight: bold");
+</script>
+</body>
+</html>
