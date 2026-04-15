@@ -200,6 +200,17 @@
             gap: 1.5rem;
             margin: 2rem 0;
         }
+        .glitch {
+            position: relative;
+            animation: glitch-skew 3s infinite alternate;
+        }
+
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            5% { transform: skew(2deg); text-shadow: -2px 0 #0ff, 2px 0 #f0f; }
+            10% { transform: skew(0deg); }
+            100% { transform: skew(0deg); }
+        }
 
         .stat {
             background: rgba(0, 20, 40, 0.5);
@@ -340,31 +351,43 @@
             gap: 2rem;
             margin: 3rem 0;
         }
+
         .feature-card {
             background: rgba(12, 22, 35, 0.6);
             backdrop-filter: blur(10px);
             border-radius: 28px;
             padding: 2rem 1.5rem;
             border: 1px solid rgba(0, 255, 255, 0.2);
+            transition: all 0.3s;
             text-align: center;
-            transition: 0.3s;
         }
+
         .feature-card:hover {
             transform: translateY(-8px);
             border-color: #0ff;
+            box-shadow: 0 10px 30px -10px #0ff33a30;
         }
+
         .feature-card i {
             font-size: 2.5rem;
             color: #0ff;
             margin-bottom: 1rem;
+            padding: 0.5rem;
         }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+        /* pricing cards */
         .pricing {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 2rem;
-            margin: 3rem 0;
+            margin: 3rem 0 5rem;
         }
+
         .price-card {
             background: rgba(8, 18, 28, 0.75);
             backdrop-filter: blur(8px);
@@ -372,23 +395,53 @@
             padding: 2rem;
             width: 300px;
             border: 1px solid rgba(0, 255, 255, 0.3);
+            transition: 0.2s;
             text-align: center;
         }
+
         .price-card.popular {
             border: 2px solid #0ff;
             box-shadow: 0 0 20px #0ff33a60;
+            transform: scale(1.02);
         }
+
         .price {
             font-size: 2.8rem;
+            font-weight: 700;
             color: #0ff;
             margin: 1rem 0;
         }
+
+        .price-card ul {
+            text-align: left;
+            margin: 1.5rem 0;
+            list-style: none;
+        }
+
+        .price-card li {
+            margin: 0.8rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .price-card li i {
+            color: #0ff;
+            width: 20px;
+        }
+        .price-card:hover {
+            transform: translateY(-10px);
+            border-color: #0ff;
+            box-shadow: 0 15px 30px -5px #0ff33a40;
+        }
+        /* CTA section */
         .cta-section {
             background: linear-gradient(145deg, #021a24, #000a12);
             border-radius: 48px;
             padding: 3rem;
             text-align: center;
             margin: 5rem 0;
+            border: 1px solid #0ff33a30;
         }
         footer {
             border-top: 1px solid rgba(0, 255, 255, 0.2);
@@ -420,8 +473,8 @@
 
     <div class="hero">
         <div class="hero-text">
-            <h1>Live market intelligence <br> <span style="color:#0ff;">on every tick</span></h1>
-            <p>ChronosTrade integrates a professional-grade charting engine with sub-millisecond execution. See the flow, predict the move.</p>
+            <h1 class="glitch">Execute trades with <br> <span style="color:#0ff;">quantum timing</span></h1>
+            <p>ChronosTrade: Next-gen desktop trading platform with sub-millisecond precision, AI market insights, and institutional-grade execution. Built for those who dominate the markets.</p>
             <div class="hero-stats">
                 <div class="stat"><h3>0.2ms</h3><p>latency</p></div>
                 <div class="stat"><h3>24/7</h3><p>algo engine</p></div>
@@ -429,7 +482,7 @@
             </div>
             <div>
                 <button class="btn-primary" id="downloadBtn">Download for Windows / macOS</button>
-                <button class="btn-outline" style="margin-left: 1rem;" id="watchDemo">Watch demo</button>
+                <button class="btn-outline" style="margin-left: 1rem;" id="watchDemo">Watch demo <i class="fas fa-play"></i></button>
             </div>
         </div>
 
@@ -462,29 +515,70 @@
         </div>
     </div>
 
-    <h2 class="section-title">Core technologies</h2>
-    <div class="features-grid">
-        <div class="feature-card"><i class="fas fa-microchip"></i><h3>Hardware accelerated</h3><p>C++ core with FPGA-ready architecture.</p></div>
-        <div class="feature-card"><i class="fas fa-brain"></i><h3>AI predictive models</h3><p>LSTM + transformer models.</p></div>
-        <div class="feature-card"><i class="fas fa-chart-simple"></i><h3>Custom scripting</h3><p>Python & JS sandbox.</p></div>
-        <div class="feature-card"><i class="fas fa-shield-alt"></i><h3>Bank-grade security</h3><p>Biometric MFA, encrypted RAM.</p></div>
-        <div class="feature-card"><i class="fas fa-chart-line"></i><h3>Multi-monitor HUD</h3><p>50+ charting tools & heatmaps.</p></div>
-        <div class="feature-card"><i class="fas fa-clock"></i><h3>Chronos Engine™</h3><p>Nanosecond timestamping.</p></div>
+    <div>
+        <h2 class="section-title">Core technologies</h2>
+        <div class="features-grid">
+            <div class="feature-card"><i class="fas fa-microchip"></i><h3>Hardware accelerated</h3><p>Native C++ core with FPGA-ready architecture, bypassing OS bottlenecks.</p></div>
+            <div class="feature-card"><i class="fas fa-brain"></i><h3>AI predictive models</h3><p>LSTM + transformer models trained on tick data, live inference.</p></div>
+            <div class="feature-card"><i class="fas fa-project-diagram"></i><h3>Custom scripting</h3><p>Python & JS sandbox, build your own indicators and strategies.</p></div>
+            <div class="feature-card"><i class="fas fa-shield-alt"></i><h3>Bank-grade security</h3><p>Biometric MFA, encrypted RAM, hardware wallet integration.</p></div>
+            <div class="feature-card"><i class="fas fa-chart-line"></i><h3>Multi-monitor HUD</h3><p>Modular layout with 50+ charting tools, heatmaps & DOM.</p></div>
+            <div class="feature-card"><i class="fas fa-clock"></i><h3>Chronos Engine™</h3><p>Nanosecond timestamping, historical tick replay with zero drift.</p></div>
+        </div>
     </div>
 
+    <!-- pricing -->
     <h2 class="section-title">Plans for every trader</h2>
     <div class="pricing">
-        <div class="price-card"><i class="fas fa-chart-line"></i><h3>Explorer</h3><div class="price">$29<span style="font-size:1rem;">/mo</span></div><button class="btn-outline">Get started</button></div>
-        <div class="price-card popular"><i class="fas fa-crown"></i><h3>Pro Trader</h3><div class="price">$79<span style="font-size:1rem;">/mo</span></div><button class="btn-primary">Start Pro trial</button></div>
-        <div class="price-card"><i class="fas fa-building"></i><h3>Institutional</h3><div class="price">Custom</div><button class="btn-outline">Contact sales</button></div>
+        <div class="price-card">
+            <i class="fas fa-chart-line" style="font-size:2rem;"></i>
+            <h3>Explorer</h3>
+            <div class="price">$29<span style="font-size:1rem;">/mo</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Core trading suite</li>
+                <li><i class="fas fa-check-circle"></i> 5 chart layouts</li>
+                <li><i class="fas fa-check-circle"></i> 1ms execution</li>
+                <li><i class="fas fa-check-circle"></i> Community indicators</li>
+            </ul>
+            <button class="btn-outline">Get started</button>
+        </div>
+        <div class="price-card popular">
+            <i class="fas fa-crown" style="color:#0ff;"></i>
+            <h3>Pro Trader <span style="font-size:12px; background:#0ff33a30; padding:2px 6px; border-radius:20px;">POPULAR</span></h3>
+            <div class="price">$79<span style="font-size:1rem;">/mo</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> All Explorer + AI predictions</li>
+                <li><i class="fas fa-check-circle"></i> Sub-millisecond (0.2ms)</li>
+                <li><i class="fas fa-check-circle"></i> API & webhooks</li>
+                <li><i class="fas fa-check-circle"></i> Risk management suite</li>
+                <li><i class="fas fa-check-circle"></i> Priority support</li>
+            </ul>
+            <button class="btn-primary">Start Pro trial</button>
+        </div>
+        <div class="price-card">
+            <i class="fas fa-building"></i>
+            <h3>Institutional</h3>
+            <div class="price">Custom</div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Dedicated co-location</li>
+                <li><i class="fas fa-check-circle"></i> Custom integrations</li>
+                <li><i class="fas fa-check-circle"></i> SLA 99.999% uptime</li>
+                <li><i class="fas fa-check-circle"></i> On-premise deployment</li>
+            </ul>
+            <button class="btn-outline">Contact sales</button>
+        </div>
     </div>
-
+     <!-- call to action -->
     <div class="cta-section">
         <h2 style="font-size: 2rem;">Ready to synchronize your edge?</h2>
-        <p style="margin: 1rem auto; max-width: 600px;">Join 5,000+ elite traders using ChronosTrade. Download now and get 14-day full access to Pro features.</p>
-        <button class="btn-primary" id="ctaDownloadBtn" style="padding: 1rem 2.5rem;">⚡ Download ChronosTrade</button>
+        <p style="margin: 1rem auto; max-width: 600px;">Join 5,000+ elite traders using ChronosTrade to outperform markets. Download now and get 14-day full access to Pro features.</p>
+        <button class="btn-primary" id="ctaDownloadBtn" style="margin-top: 1rem; padding: 1rem 2.5rem; font-size: 1.2rem;">⚡ Download ChronosTrade</button>
+        <p style="margin-top: 1rem; font-size: 0.8rem;">Windows 11/10 • macOS Monterey+ • Linux (beta)</p>
     </div>
-    <footer><p>© 2026 ChronosTrade — Precision timing lab.</p></footer>
+    <footer>
+        <p><i class="far fa-copyright"></i> 2026 ChronosTrade — Precision timing lab. All market data simulated for demo.</p>
+        <p style="margin-top: 0.5rem;"><i class="fab fa-discord"></i> Discord · <i class="fab fa-twitter"></i> @ChronosTrade · <i class="fab fa-github"></i> Core API</p>
+    </footer>
 </div>
 
 <script>
@@ -624,13 +718,133 @@
         setTimeout(() => chart.timeScale().fitContent(), 100);
     });
 
-    // Interaction Notifications (keep professional)
-    document.getElementById('downloadBtn')?.addEventListener('click', () => alert('📦 ChronosTrade installer download started.'));
-    document.getElementById('ctaDownloadBtn')?.addEventListener('click', () => alert('✅ 14-day Pro trial activated. Check your email.'));
-    document.getElementById('earlyAccessBtn')?.addEventListener('click', () => alert('🚀 Early access invite sent.'));
-    document.getElementById('watchDemo')?.addEventListener('click', () => alert('🎥 Launching interactive demo of Chronos Engine.'));
-    const priceBtns = document.querySelectorAll('.price-card button');
-    priceBtns.forEach(btn => btn.addEventListener('click', () => alert('⚡ Redirecting to secure checkout.')));
+    // background particle animation (techy)
+    function createParticles() {
+        const container = document.getElementById('particleContainer');
+        const particleCount = 60;
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 4 + 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            const duration = 8 + Math.random() * 15;
+            const delay = Math.random() * 10;
+            particle.style.animation = `floatParticle ${duration}s infinite alternate ease-in-out`;
+            particle.style.animationDelay = `${delay}s`;
+            particle.style.opacity = Math.random() * 0.4 + 0.1;
+            container.appendChild(particle);
+        }
+    }
+    createParticles();
+
+    // additional dynamic grid lines effect (simple animated line)
+    const styleSheet = document.createElement("style");
+    styleSheet.textContent = `
+        .animated-bg::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 30% 50%, rgba(0,255,255,0.08) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: slowPan 3s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes slowPan {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+    `;
+    document.head.appendChild(styleSheet);
+
+    // Interactive alerts for demo purpose (simulate "selling the software" engagement)
+    const downloadBtn = document.getElementById('downloadBtn');
+    const ctaDownload = document.getElementById('ctaDownloadBtn');
+    const earlyBtn = document.getElementById('earlyAccessBtn');
+    const watchDemoBtn = document.getElementById('watchDemo');
+    const allPriceButtons = document.querySelectorAll('.price-card .btn-outline, .price-card .btn-primary');
+    
+    function notify(message, isSuccess = true) {
+        // create floating toast
+        const toast = document.createElement('div');
+        toast.innerText = message;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '30px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.backgroundColor = isSuccess ? '#0a6c7c' : '#b0003a';
+        toast.style.color = 'white';
+        toast.style.padding = '12px 28px';
+        toast.style.borderRadius = '40px';
+        toast.style.fontFamily = "'Space Grotesk', monospace";
+        toast.style.fontWeight = '500';
+        toast.style.backdropFilter = 'blur(12px)';
+        toast.style.zIndex = '9999';
+        toast.style.border = `1px solid ${isSuccess ? '#0ff' : '#ff4d6d'}`;
+        toast.style.boxShadow = '0 0 15px rgba(0,255,255,0.3)';
+        toast.style.fontSize = '0.9rem';
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 500);
+        }, 2800);
+    }
+
+    downloadBtn.addEventListener('click', () => {
+        notify('📦 Downloading ChronosTrade setup for your OS — secure installer (65 MB).', true);
+    });
+    ctaDownload.addEventListener('click', () => {
+        notify('✅ Download started. 14-day Pro trial included! Check your email for license key.', true);
+    });
+    earlyBtn.addEventListener('click', () => {
+        notify('🚀 Early access unlocked! We’ll send you a private beta invite within 24h.', true);
+    });
+    watchDemoBtn.addEventListener('click', () => {
+        notify('🎥 Launching interactive demo: Chronos Engine live simulation (opening in new tab).', true);
+        setTimeout(() => {
+            window.open('#', '_blank');
+            notify('Demo playback ready. Experience 0.2ms execution in your browser sandbox.', true);
+        }, 200);
+    });
+    
+    // pricing buttons interaction
+    allPriceButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const card = btn.closest('.price-card');
+            let plan = 'Explorer';
+            if (card) {
+                const titleElem = card.querySelector('h3');
+                if (titleElem) plan = titleElem.innerText.trim().replace('POPULAR', '').trim();
+            }
+            notify(`⚡ You selected ${plan} plan. Redirecting to secure checkout (sandbox).`, true);
+        });
+    });
+
+    // navigation smooth scroll placeholder + glitch effect random
+    const links = document.querySelectorAll('.nav-links a');
+    links.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            notify(`🔍 ${link.innerText} section — coming soon. Full documentation live in Q2 2026.`, false);
+        });
+    });
+
+    // additional "techy" console message for devs
+    console.log("%cChronosTrade OS ready | low-latency pipeline active", "color: #0ff; font-size: 16px; font-family: monospace");
+    
+    // subtle time-based gradient on hero-graphic (extra)
+    setInterval(() => {
+        const graphic = document.querySelector('.hero-graphic');
+        if (graphic) {
+            const hue = (Date.now() / 50) % 360;
+            graphic.style.borderImage = `linear-gradient(${hue}deg, #0ff, #2a6f8f) 1`;
+            graphic.style.borderImageSlice = 1;
+        }
+    }, 2000);
 </script>
 </body>
 </html>
