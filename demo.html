@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ChronosTrade | Institutional Trading Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0D1117;
+            color: #E6EDF3;
+            overflow-x: hidden;
+            font-size: 13px;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0D1117;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #FFFFFF, #58A6FF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 2rem;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid #21262D;
+            border-top-color: #58A6FF;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #8B949E;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .loading-progress {
+            width: 200px;
+            height: 2px;
+            background: #21262D;
+            margin: 1rem auto 0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            background: #58A6FF;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 20% 30%, #0D1117, #0A0C10);
+            z-index: -2;
+        }
+
+        .bg-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 2px,
+                rgba(56, 139, 253, 0.03) 2px,
+                rgba(56, 139, 253, 0.03) 4px
+            );
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .container.visible {
+            opacity: 1;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 0;
+            border-bottom: 1px solid #21262D;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #FFFFFF, #58A6FF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo-sub {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #8B949E;
+            margin-left: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #8B949E;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #58A6FF;
+        }
+
+        .btn-secondary {
+            background: #21262D;
+            border: 1px solid #30363D;
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #E6EDF3;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            background: #30363D;
+            border-color: #8B949E;
+        }
+
+        .capital-panel {
+            background: #161B22;
+            border: 1px solid #21262D;
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .capital-section {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+        }
+
+        .capital-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #8B949E;
+        }
+
+        .capital-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #58A6FF;
+            letter-spacing: -0.5px;
+        }
+
+        .lot-badge {
+            background: #21262D;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #8B949E;
+        }
+
+        .risk-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .risk-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #0D1117;
+            padding: 0.25rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #21262D;
+        }
+
+        .risk-group label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #8B949E;
+            text-transform: uppercase;
+        }
+
+        .risk-group select, .risk-group input {
+            background: transparent;
+            border: none;
+            color: #E6EDF3;
+            padding: 0.25rem 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            outline: none;
+            font-family: 'Inter', monospace;
+        }
+
+        .risk-group select option {
+            background: #161B22;
+        }
+
+        .risk-preview {
+            background: #0D1117;
+            padding: 0.25rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #21262D;
+            font-size: 0.7rem;
+            font-family: monospace;
+            color: #58A6FF;
+        }
+
+        .chart-panel {
+            background: #161B22;
+            border: 1px solid #21262D;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #21262D;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .symbol-info {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+        }
+
+        .symbol {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #E6EDF3;
+        }
+
+        .exchange {
+            font-size: 0.7rem;
+            color: #8B949E;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #3FB950;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .live-text {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #3FB950;
+            text-transform: uppercase;
+        }
+
+        .candle-timer {
+            background: #0D1117;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-family: monospace;
+            color: #58A6FF;
+            border: 1px solid #21262D;
+        }
+
+        .tool-buttons, .timeframe-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon-btn, .tf-btn {
+            background: #21262D;
+            border: 1px solid #30363D;
+            color: #8B949E;
+            padding: 0.35rem 0.85rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .icon-btn:hover, .tf-btn:hover {
+            background: #30363D;
+            color: #E6EDF3;
+        }
+
+        .icon-btn.active, .tf-btn.active {
+            background: #1F6FEB;
+            border-color: #1F6FEB;
+            color: white;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 480px;
+        }
+
+        #candlestickCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 8px;
+            cursor: crosshair;
+        }
+
+        .chart-controls {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+        }
+
+        .chart-ctrl-btn {
+            background: rgba(13, 17, 23, 0.9);
+            border: 1px solid #30363D;
+            color: #8B949E;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.2s;
+            backdrop-filter: blur(8px);
+        }
+
+        .chart-ctrl-btn:hover {
+            background: #21262D;
+            color: #E6EDF3;
+        }
+
+        .price-bar {
+            background: #0D1117;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .current-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #58A6FF;
+        }
+
+        .price-stats {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.7rem;
+        }
+
+        .stat-item {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .stat-label {
+            color: #8B949E;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            font-family: monospace;
+        }
+
+        .stat-positive {
+            color: #3FB950;
+        }
+
+        .stat-negative {
+            color: #F85149;
+        }
+
+        .trade-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-buy, .btn-sell {
+            flex: 0 1 200px;
+            padding: 0.875rem 2rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-buy {
+            background: #1F6FEB;
+            color: white;
+        }
+
+        .btn-buy:hover {
+            background: #388BFD;
+            transform: translateY(-1px);
+        }
+
+        .btn-sell {
+            background: #DA3633;
+            color: white;
+        }
+
+        .btn-sell:hover {
+            background: #F85149;
+            transform: translateY(-1px);
+        }
+
+        .trade-panel {
+            background: #161B22;
+            border: 1px solid #21262D;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #21262D;
+        }
+
+        .panel-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #8B949E;
+        }
+
+        .active-trade {
+            background: #0D1117;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .trade-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .trade-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .trade-type {
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .trade-type.long {
+            color: #3FB950;
+        }
+
+        .trade-type.short {
+            color: #F85149;
+        }
+
+        .trade-meta {
+            font-size: 0.7rem;
+            color: #8B949E;
+        }
+
+        .pnl-display {
+            text-align: right;
+        }
+
+        .pnl-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .pnl-positive {
+            color: #3FB950;
+        }
+
+        .pnl-negative {
+            color: #F85149;
+        }
+
+        .pnl-percent {
+            font-size: 0.7rem;
+            color: #8B949E;
+        }
+
+        .history-log {
+            max-height: 140px;
+            overflow-y: auto;
+            font-size: 0.7rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .log-entry {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #21262D;
+            color: #8B949E;
+        }
+
+        .log-time {
+            color: #58A6FF;
+            margin-right: 1rem;
+        }
+
+        .log-message {
+            color: #E6EDF3;
+        }
+
+        .log-exit {
+            color: #F85149;
+        }
+
+        .log-enter {
+            color: #3FB950;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0D1117;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #30363D;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8B949E;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem; }
+            .capital-value { font-size: 1.25rem; }
+            .btn-buy, .btn-sell { flex: 1; }
+            .price-stats { flex-wrap: wrap; gap: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+    <div class="loading-content">
+        <div class="loading-logo">CHRONOS<span style="color:#58A6FF">TRADE</span></div>
+        <div class="loading-spinner"></div>
+        <div class="loading-text">INITIALIZING TERMINAL</div>
+        <div class="loading-progress">
+            <div class="loading-progress-bar" id="loadingProgress"></div>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="mainContainer">
+    <nav class="navbar">
+        <div>
+            <span class="logo">CHRONOS<span style="color:#58A6FF">TRADE</span></span>
+            <span class="logo-sub">terminal</span>
+        </div>
+        <div class="nav-links">
+            <a href="features.html">Features</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="download.html">Download</a>
+        </div>
+        <button class="btn-secondary" id="resetBtn">Reset Account</button>
+    </nav>
+
+    <div class="capital-panel">
+        <div class="capital-section">
+            <span class="capital-label">Available Capital</span>
+            <span class="capital-value" id="capitalDisplay">$1,000,000.00</span>
+            <span class="lot-badge" id="lotInfo">Min Lot: 0.01 BTC</span>
+        </div>
+        <div class="risk-controls">
+            <div class="risk-group">
+                <label>Risk Type</label>
+                <select id="riskType">
+                    <option value="percent">Percentage</option>
+                    <option value="amount">Fixed Amount</option>
+                </select>
+            </div>
+            <div class="risk-group">
+                <label id="riskLabel">Risk %</label>
+                <input type="number" id="riskValue" value="2" step="0.5" min="0.1" max="100">
+            </div>
+            <div class="risk-group">
+                <label>ATR Period</label>
+                <input type="number" id="atrPeriod" value="14" min="5" max="50">
+            </div>
+            <div class="risk-preview" id="riskPreview">
+                Risk per trade: $20,000.00 (2.00% of capital)
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-panel">
+        <div class="chart-header">
+            <div class="symbol-info">
+                <span class="symbol">BTC/USDT</span>
+                <span class="exchange">PERPETUAL FUTURES</span>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span class="live-text">LIVE</span>
+                </div>
+            </div>
+            <div class="candle-timer" id="candleTimer">Next Candle: --</div>
+            <div class="tool-buttons">
+                <button id="drawBtn" class="icon-btn"><i class="fas fa-draw-polygon"></i> Draw</button>
+                <button id="clearDrawBtn" class="icon-btn"><i class="fas fa-trash-alt"></i> Clear</button>
+            </div>
+            <div class="timeframe-buttons">
+                <button data-tf="1" class="tf-btn">1m</button>
+                <button data-tf="5" class="tf-btn">5m</button>
+                <button data-tf="15" class="tf-btn active">15m</button>
+                <button data-tf="30" class="tf-btn">30m</button>
+                <button data-tf="60" class="tf-btn">1h</button>
+            </div>
+        </div>
+        <div class="chart-container">
+            <canvas id="candlestickCanvas"></canvas>
+            <div class="chart-controls">
+                <button id="zoomInBtn" class="chart-ctrl-btn">Zoom +</button>
+                <button id="zoomOutBtn" class="chart-ctrl-btn">Zoom -</button>
+                <button id="resetViewBtn" class="chart-ctrl-btn">Reset</button>
+            </div>
+        </div>
+        <div class="price-bar">
+            <div>
+                <span class="current-price" id="currentPrice">$42,500.00</span>
+            </div>
+            <div class="price-stats">
+                <div class="stat-item">
+                    <span class="stat-label">24h Change</span>
+                    <span class="stat-value" id="priceChange">--</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">24h Range</span>
+                    <span class="stat-value" id="priceRange">--</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">ATR (14)</span>
+                    <span class="stat-value" id="atrValue">--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="trade-buttons">
+        <button id="buyBtn" class="btn-buy">BUY</button>
+        <button id="sellBtn" class="btn-sell">SELL</button>
+    </div>
+
+    <div class="trade-panel">
+        <div class="panel-header">
+            <span class="panel-title">Active Position</span>
+            <span class="panel-title" id="positionStatus">No Position</span>
+        </div>
+        <div id="activeTradePanel" class="active-trade">
+            <div style="color: #8B949E; text-align: center;">No open position</div>
+        </div>
+        
+        <div class="panel-header" style="margin-top: 1rem;">
+            <span class="panel-title">Trade History</span>
+        </div>
+        <div id="historyPanel" class="history-log"></div>
+    </div>
+</div>
+
+<script>
+    // Trading State
+    let capital = 1000000;
+    let activeTrade = null;
+    let currentTimeframe = 15;
+    let atrValue = 50;
+    
+    const LOT_CONFIG = {
+        symbol: 'BTC',
+        minLotSize: 0.01,
+        lotStep: 0.01,
+        pricePrecision: 2,
+        quantityPrecision: 3
+    };
+    
+    let minuteCandles = [];
+    let currentLiveCandle = null;
+    let priceHistory = [];
+    let sessionHigh = 42500;
+    let sessionLow = 42500;
+    let sessionStartPrice = 42500;
+    let sessionStartTime = Date.now();
+    let chartData = [];
+    
+    let visibleStartIndex = 0;
+    let visibleEndIndex = 99;
+    let zoomLevel = 1;
+    let autoScroll = true;
+    
+    let drawingMode = false;
+    let drawings = [];
+    let isDrawing = false;
+    let drawStart = null;
+    
+    const canvas = document.getElementById('candlestickCanvas');
+    let ctx = null;
+    
+    // Console logging helper - only important events go to console
+    function consoleLog(message, type = 'info') {
+        const prefix = type === 'error' ? '❌' : (type === 'success' ? '✅' : '📊');
+        console.log(`${prefix} [ChronosTrade] ${message}`);
+    }
+    
+    // Update risk preview (UI only, no console)
+    function updateRiskPreview() {
+        const riskType = document.getElementById('riskType').value;
+        let riskValue = parseFloat(document.getElementById('riskValue').value) || 2;
+        
+        if (riskValue < 0.1) riskValue = 0.1;
+        if (riskValue > 100 && riskType === 'percent') riskValue = 100;
+        
+        let riskAmount;
+        if (riskType === 'percent') {
+            riskAmount = capital * (riskValue / 100);
+            document.getElementById('riskPreview').innerHTML = `Target Risk: $${riskAmount.toFixed(2)} (${riskValue}% of capital)`;
+        } else {
+            riskAmount = Math.min(riskValue, capital);
+            const riskPercent = (riskAmount / capital) * 100;
+            document.getElementById('riskPreview').innerHTML = `Target Risk: $${riskAmount.toFixed(2)} (${riskPercent.toFixed(2)}% of capital)`;
+        }
+        
+        const riskPercent = riskType === 'percent' ? riskValue : (riskAmount / capital) * 100;
+        if (riskPercent > 10) {
+            document.getElementById('riskPreview').style.color = '#F85149';
+            document.getElementById('riskPreview').style.borderColor = '#F85149';
+        } else {
+            document.getElementById('riskPreview').style.color = '#58A6FF';
+            document.getElementById('riskPreview').style.borderColor = '#21262D';
+        }
+    }
+    
+    // Generate initial historical minute data
+    function generateInitialMinuteData() {
+        consoleLog('Generating historical market data...', 'info');
+        const data = [];
+        const now = new Date();
+        const startDate = new Date(now);
+        startDate.setDate(startDate.getDate() - 7);
+        startDate.setHours(0, 0, 0, 0);
+        
+        let price = 42500;
+        
+        for (let i = 0; i < 7 * 24 * 60; i++) {
+            const time = new Date(startDate.getTime() + i * 60 * 1000);
+            const change = (Math.random() - 0.5) * 12;
+            const open = price;
+            const close = price + change;
+            const high = Math.max(open, close) + Math.random() * 15;
+            const low = Math.min(open, close) - Math.random() * 15;
+            
+            data.push({
+                time: time,
+                open: open,
+                high: high,
+                low: low,
+                close: close
+            });
+            price = close;
+            priceHistory.push(close);
+        }
+        consoleLog(`Generated ${data.length} minute candles (7 days history)`, 'success');
+        return data;
+    }
+    
+    minuteCandles = generateInitialMinuteData();
+    
+    function getCurrentCandleStartTime() {
+        const now = new Date();
+        const minutes = now.getMinutes();
+        const remainder = minutes % currentTimeframe;
+        const startMinute = minutes - remainder;
+        const startTime = new Date(now);
+        startTime.setMinutes(startMinute);
+        startTime.setSeconds(0);
+        startTime.setMilliseconds(0);
+        return startTime;
+    }
+    
+    function updateCurrentLiveCandle() {
+        const now = new Date();
+        const candleStart = getCurrentCandleStartTime();
+        
+        if (!currentLiveCandle || currentLiveCandle.startTime.getTime() !== candleStart.getTime()) {
+            if (currentLiveCandle) {
+                for (let i = 0; i < currentTimeframe; i++) {
+                    const minuteTime = new Date(currentLiveCandle.startTime.getTime() + i * 60 * 1000);
+                    minuteCandles.push({
+                        time: minuteTime,
+                        open: currentLiveCandle.open,
+                        high: currentLiveCandle.high,
+                        low: currentLiveCandle.low,
+                        close: currentLiveCandle.close
+                    });
+                }
+                if (minuteCandles.length > 10 * 24 * 60) {
+                    minuteCandles = minuteCandles.slice(-10 * 24 * 60);
+                }
+            }
+            
+            let openPrice = minuteCandles.length > 0 ? minuteCandles[minuteCandles.length - 1].close : 42500;
+            
+            currentLiveCandle = {
+                startTime: candleStart,
+                open: openPrice,
+                high: openPrice,
+                low: openPrice,
+                close: openPrice
+            };
+        }
+        
+        const elapsedSeconds = (now - currentLiveCandle.startTime) / 1000;
+        const totalSeconds = currentTimeframe * 60;
+        
+        const volatility = 8;
+        const randomComponent = (Math.random() - 0.5) * volatility;
+        
+        let momentumComponent = 0;
+        if (priceHistory.length > 20) {
+            const recentChanges = [];
+            for (let i = priceHistory.length - 10; i < priceHistory.length - 1; i++) {
+                if (priceHistory[i+1] && priceHistory[i]) {
+                    recentChanges.push(priceHistory[i+1] - priceHistory[i]);
+                }
+            }
+            if (recentChanges.length > 0) {
+                const avgRecentChange = recentChanges.reduce((a, b) => a + b, 0) / recentChanges.length;
+                momentumComponent = avgRecentChange * 0.05;
+            }
+        }
+        
+        const change = randomComponent + momentumComponent;
+        const newClose = currentLiveCandle.close + change;
+        
+        let boundedClose = newClose;
+        if (boundedClose > 55000) {
+            boundedClose = 55000 - (boundedClose - 55000) * 0.5;
+        }
+        if (boundedClose < 30000) {
+            boundedClose = 30000 + (30000 - boundedClose) * 0.5;
+        }
+        
+        currentLiveCandle.close = boundedClose;
+        currentLiveCandle.high = Math.max(currentLiveCandle.high, boundedClose);
+        currentLiveCandle.low = Math.min(currentLiveCandle.low, boundedClose);
+        
+        priceHistory.push(boundedClose);
+        if (priceHistory.length > 1000) priceHistory.shift();
+        
+        if (Date.now() - sessionStartTime > 3600000) {
+            sessionHigh = boundedClose;
+            sessionLow = boundedClose;
+            sessionStartPrice = boundedClose;
+            sessionStartTime = Date.now();
+        } else {
+            sessionHigh = Math.max(sessionHigh, boundedClose);
+            sessionLow = Math.min(sessionLow, boundedClose);
+        }
+        
+        const remainingSeconds = Math.max(0, totalSeconds - elapsedSeconds);
+        const minutes = Math.floor(remainingSeconds / 60);
+        const seconds = Math.floor(remainingSeconds % 60);
+        document.getElementById('candleTimer').innerHTML = `Next Candle: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        document.getElementById('currentPrice').innerHTML = `$${boundedClose.toFixed(LOT_CONFIG.pricePrecision)}`;
+        
+        const priceChange24h = boundedClose - sessionStartPrice;
+        const changePercent = (priceChange24h / sessionStartPrice) * 100;
+        const changeElement = document.getElementById('priceChange');
+        if (changeElement) {
+            changeElement.innerHTML = `${priceChange24h >= 0 ? '+' : ''}$${priceChange24h.toFixed(2)} (${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(2)}%)`;
+            changeElement.className = `stat-value ${priceChange24h >= 0 ? 'stat-positive' : 'stat-negative'}`;
+        }
+        
+        const rangeElement = document.getElementById('priceRange');
+        if (rangeElement) {
+            rangeElement.innerHTML = `$${sessionLow.toFixed(2)} - $${sessionHigh.toFixed(2)}`;
+        }
+    }
+    
+    function aggregateToTimeframe(timeframeMinutes) {
+        const aggregated = [];
+        let group = [];
+        let currentGroupStart = null;
+        
+        for (const candle of minuteCandles) {
+            const minutesSinceStart = Math.floor(candle.time.getTime() / (1000 * 60));
+            const groupIndex = Math.floor(minutesSinceStart / timeframeMinutes);
+            
+            if (currentGroupStart === null) {
+                currentGroupStart = groupIndex;
+            }
+            
+            if (groupIndex !== currentGroupStart) {
+                if (group.length > 0) {
+                    const open = group[0].open;
+                    const close = group[group.length - 1].close;
+                    const high = Math.max(...group.map(c => c.high));
+                    const low = Math.min(...group.map(c => c.low));
+                    aggregated.push({
+                        time: Math.floor(group[0].time.getTime() / 1000),
+                        open: open,
+                        high: high,
+                        low: low,
+                        close: close
+                    });
+                }
+                group = [];
+                currentGroupStart = groupIndex;
+            }
+            group.push(candle);
+        }
+        
+        if (group.length > 0) {
+            const open = group[0].open;
+            const close = group[group.length - 1].close;
+            const high = Math.max(...group.map(c => c.high));
+            const low = Math.min(...group.map(c => c.low));
+            aggregated.push({
+                time: Math.floor(group[0].time.getTime() / 1000),
+                open: open,
+                high: high,
+                low: low,
+                close: close
+            });
+        }
+        
+        return aggregated;
+    }
+    
+    function updateChartData() {
+        const historicalAggregated = aggregateToTimeframe(currentTimeframe);
+        
+        if (currentLiveCandle) {
+            chartData = [...historicalAggregated];
+            chartData.push({
+                time: Math.floor(currentLiveCandle.startTime.getTime() / 1000),
+                open: currentLiveCandle.open,
+                high: currentLiveCandle.high,
+                low: currentLiveCandle.low,
+                close: currentLiveCandle.close,
+                isLive: true
+            });
+        } else {
+            chartData = historicalAggregated;
+        }
+        
+        atrValue = calculateATR(chartData.slice(-50), parseInt(document.getElementById('atrPeriod').value));
+        const atrElement = document.getElementById('atrValue');
+        if (atrElement) {
+            atrElement.innerHTML = `$${atrValue.toFixed(2)}`;
+        }
+        
+        updateRiskPreview();
+        
+        if (activeTrade) updateActiveTradeDisplay();
+        renderChart();
+    }
+    
+    function calculateATR(data, period) {
+        if (data.length < period + 1) return 50;
+        const trValues = [];
+        for (let i = 1; i < data.length; i++) {
+            const tr = Math.max(
+                data[i].high - data[i].low,
+                Math.abs(data[i].high - data[i - 1].close),
+                Math.abs(data[i].low - data[i - 1].close)
+            );
+            trValues.push(tr);
+        }
+        const recentTR = trValues.slice(-period);
+        return recentTR.reduce((a, b) => a + b, 0) / period;
+    }
+    
+    function calculatePositionSize(entryPrice) {
+        const riskType = document.getElementById('riskType').value;
+        let riskValue = parseFloat(document.getElementById('riskValue').value) || 2;
+        
+        if (riskValue < 0.1) riskValue = 0.1;
+        if (riskValue > 100 && riskType === 'percent') riskValue = 100;
+        
+        let desiredRiskAmount;
+        if (riskType === 'percent') {
+            desiredRiskAmount = capital * (riskValue / 100);
+        } else {
+            desiredRiskAmount = Math.min(riskValue, capital);
+        }
+        
+        if (desiredRiskAmount <= 0) desiredRiskAmount = 100;
+        if (atrValue <= 0) atrValue = 50;
+        
+        let theoreticalQuantity = desiredRiskAmount / atrValue;
+        
+        const lots = Math.floor(theoreticalQuantity / LOT_CONFIG.lotStep);
+        let quantity = lots * LOT_CONFIG.lotStep;
+        
+        if (quantity < LOT_CONFIG.minLotSize && theoreticalQuantity >= LOT_CONFIG.minLotSize / 2) {
+            quantity = LOT_CONFIG.minLotSize;
+        } else if (quantity < LOT_CONFIG.minLotSize) {
+            quantity = 0;
+        }
+        
+        const requiredCapital = quantity * entryPrice;
+        if (requiredCapital > capital && quantity > 0) {
+            const maxAffordableQuantity = Math.floor((capital / entryPrice) / LOT_CONFIG.lotStep) * LOT_CONFIG.lotStep;
+            quantity = Math.max(0, maxAffordableQuantity);
+        }
+        
+        const riskPercent = riskType === 'percent' ? riskValue : (desiredRiskAmount / capital) * 100;
+        if (riskPercent >= 90 && quantity === 0 && theoreticalQuantity > 0) {
+            quantity = Math.floor((capital / entryPrice) / LOT_CONFIG.lotStep) * LOT_CONFIG.lotStep;
+            if (quantity < LOT_CONFIG.minLotSize && capital >= entryPrice * LOT_CONFIG.minLotSize) {
+                quantity = LOT_CONFIG.minLotSize;
+            }
+        }
+        
+        const actualRiskAmount = quantity * atrValue;
+        const actualRiskPercent = (actualRiskAmount / capital) * 100;
+        
+        quantity = parseFloat(quantity.toFixed(LOT_CONFIG.quantityPrecision));
+        
+        return { 
+            quantity, 
+            actualRiskAmount, 
+            actualRiskPercent,
+            desiredRiskAmount,
+            desiredRiskPercent: riskType === 'percent' ? riskValue : (desiredRiskAmount / capital) * 100
+        };
+    }
+    
+    function calculatePnL(price) {
+        if (!activeTrade) return null;
+        const pnl = activeTrade.type === 'long' 
+            ? (price - activeTrade.entryPrice) * activeTrade.quantity
+            : (activeTrade.entryPrice - price) * activeTrade.quantity;
+        return pnl;
+    }
+    
+    // UI-only history (only trade entries/exits)
+    function addToHistory(message, type = 'info') {
+        const historyDiv = document.getElementById('historyPanel');
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        const time = new Date().toLocaleTimeString();
+        
+        let messageClass = '';
+        if (type === 'enter') messageClass = 'log-enter';
+        if (type === 'exit') messageClass = 'log-exit';
+        
+        entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-message ${messageClass}">${message}</span>`;
+        historyDiv.insertBefore(entry, historyDiv.firstChild);
+        
+        while (historyDiv.children.length > 50) {
+            historyDiv.removeChild(historyDiv.lastChild);
+        }
+    }
+    
+    function handleBuy() {
+        if (activeTrade) {
+            if (activeTrade.type === 'short') {
+                consoleLog(`Closing SHORT position via BUY button`, 'info');
+                exitTrade();
+            } else {
+                const msg = 'Already in a LONG position. Use SELL to close.';
+                consoleLog(msg, 'error');
+                addToHistory(msg, 'error');
+            }
+        } else {
+            consoleLog(`Opening new LONG position`, 'info');
+            enterTrade('long');
+        }
+    }
+    
+    function handleSell() {
+        if (activeTrade) {
+            if (activeTrade.type === 'long') {
+                consoleLog(`Closing LONG position via SELL button`, 'info');
+                exitTrade();
+            } else {
+                const msg = 'Already in a SHORT position. Use BUY to close.';
+                consoleLog(msg, 'error');
+                addToHistory(msg, 'error');
+            }
+        } else {
+            consoleLog(`Opening new SHORT position`, 'info');
+            enterTrade('short');
+        }
+    }
+    
+    function enterTrade(type) {
+        if (activeTrade) {
+            const msg = `Cannot open position: Already has an active ${activeTrade.type.toUpperCase()} position`;
+            consoleLog(msg, 'error');
+            addToHistory(msg, 'error');
+            return;
+        }
+        
+        if (chartData.length === 0) return;
+        
+        const currentPrice = chartData[chartData.length - 1].close;
+        const position = calculatePositionSize(currentPrice);
+        
+        if (position.quantity <= 0) {
+            const msg = `Position size below minimum lot (${LOT_CONFIG.minLotSize} ${LOT_CONFIG.symbol}) - Try increasing risk amount`;
+            consoleLog(msg, 'error');
+            addToHistory(msg, 'error');
+            return;
+        }
+        
+        const requiredCapital = position.quantity * currentPrice;
+        if (requiredCapital > capital) {
+            const msg = `Insufficient capital. Required: $${requiredCapital.toFixed(2)}`;
+            consoleLog(msg, 'error');
+            addToHistory(msg, 'error');
+            return;
+        }
+        
+        activeTrade = { 
+            type, 
+            entryPrice: currentPrice, 
+            quantity: position.quantity, 
+            entryTime: new Date() 
+        };
+        
+        const entryMsg = `[ENTER] ${type.toUpperCase()} ${position.quantity.toFixed(LOT_CONFIG.quantityPrecision)} ${LOT_CONFIG.symbol} @ $${currentPrice.toFixed(LOT_CONFIG.pricePrecision)} | Risk: $${position.actualRiskAmount.toFixed(2)} (${position.actualRiskPercent.toFixed(2)}% of capital)`;
+        
+        consoleLog(entryMsg, 'success');
+        addToHistory(entryMsg, 'enter');
+        updateActiveTradeDisplay();
+    }
+    
+    function exitTrade() {
+        if (!activeTrade) {
+            const msg = 'No active position to close';
+            consoleLog(msg, 'error');
+            addToHistory(msg, 'error');
+            return;
+        }
+        
+        const currentPrice = chartData[chartData.length - 1].close;
+        const pnl = calculatePnL(currentPrice);
+        
+        const oldCapital = capital;
+        capital += pnl;
+        if (capital < 0) capital = 0;
+        
+        document.getElementById('capitalDisplay').innerHTML = `$${capital.toFixed(2)}`;
+        const pnlPercent = (pnl / (activeTrade.entryPrice * activeTrade.quantity)) * 100;
+        
+        const exitMsg = `[EXIT] ${activeTrade.type.toUpperCase()} position | P&L: ${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} (${pnlPercent >= 0 ? '+' : ''}${pnlPercent.toFixed(2)}%) | Capital: $${oldCapital.toFixed(2)} → $${capital.toFixed(2)}`;
+        
+        consoleLog(exitMsg, pnl >= 0 ? 'success' : 'error');
+        addToHistory(exitMsg, 'exit');
+        
+        activeTrade = null;
+        document.getElementById('activeTradePanel').innerHTML = '<div style="color: #8B949E; text-align: center;">No open position</div>';
+        document.getElementById('positionStatus').innerHTML = 'No Position';
+        
+        updateRiskPreview();
+    }
+    
+    function updateActiveTradeDisplay() {
+        if (!activeTrade) return;
+        
+        if (chartData.length === 0) return;
+        
+        const currentPrice = chartData[chartData.length - 1].close;
+        const pnl = calculatePnL(currentPrice);
+        const pnlPercent = (pnl / (activeTrade.entryPrice * activeTrade.quantity)) * 100;
+        const currentEquity = capital + pnl;
+        
+        document.getElementById('activeTradePanel').innerHTML = `
+            <div class="trade-details">
+                <div class="trade-info">
+                    <div class="trade-type ${activeTrade.type === 'long' ? 'long' : 'short'}">${activeTrade.type.toUpperCase()} POSITION</div>
+                    <div class="trade-meta">Quantity: ${activeTrade.quantity.toFixed(LOT_CONFIG.quantityPrecision)} ${LOT_CONFIG.symbol}</div>
+                    <div class="trade-meta">Entry: $${activeTrade.entryPrice.toFixed(LOT_CONFIG.pricePrecision)}</div>
+                </div>
+                <div class="pnl-display">
+                    <div class="pnl-amount ${pnl >= 0 ? 'pnl-positive' : 'pnl-negative'}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</div>
+                    <div class="pnl-percent">${pnlPercent >= 0 ? '+' : ''}${pnlPercent.toFixed(2)}%</div>
+                    <div class="trade-meta">Equity: $${currentEquity.toFixed(2)}</div>
+                </div>
+            </div>
+        `;
+        document.getElementById('positionStatus').innerHTML = `${activeTrade.type.toUpperCase()} @ $${activeTrade.entryPrice.toFixed(2)}`;
+    }
+    
+    function resetAccount() {
+        capital = 1000000;
+        activeTrade = null;
+        document.getElementById('capitalDisplay').innerHTML = `$${capital.toFixed(2)}`;
+        document.getElementById('activeTradePanel').innerHTML = '<div style="color: #8B949E; text-align: center;">No open position</div>';
+        document.getElementById('positionStatus').innerHTML = 'No Position';
+        updateRiskPreview();
+        consoleLog('Account reset to $1,000,000', 'info');
+        addToHistory('Account reset to $1,000,000', 'info');
+    }
+    
+    function renderChart() {
+        if (!ctx || chartData.length === 0) return;
+        
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+        
+        const totalCandles = chartData.length;
+        const visibleCandles = Math.floor(80 / zoomLevel);
+        
+        if (autoScroll && visibleEndIndex >= totalCandles - 2) {
+            visibleEndIndex = totalCandles - 1;
+            visibleStartIndex = Math.max(0, visibleEndIndex - visibleCandles);
+        }
+        
+        visibleEndIndex = Math.min(visibleEndIndex, totalCandles - 1);
+        visibleStartIndex = Math.max(0, visibleEndIndex - visibleCandles);
+        
+        const visibleData = chartData.slice(visibleStartIndex, visibleEndIndex + 1);
+        if (visibleData.length === 0) return;
+        
+        let minPrice = Math.min(...visibleData.map(c => c.low));
+        let maxPrice = Math.max(...visibleData.map(c => c.high));
+        const padding = (maxPrice - minPrice) * 0.1;
+        minPrice -= padding;
+        maxPrice += padding;
+        const priceRange = maxPrice - minPrice;
+        
+        const candleWidth = Math.min(8, (w - 80) / visibleData.length);
+        const spacing = candleWidth + 2;
+        const startX = 50;
+        
+        ctx.strokeStyle = '#21262D';
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i <= 5; i++) {
+            const y = 30 + (i / 5) * (h - 60);
+            ctx.beginPath();
+            ctx.moveTo(40, y);
+            ctx.lineTo(w - 20, y);
+            ctx.stroke();
+            const price = maxPrice - (i / 5) * priceRange;
+            ctx.fillStyle = '#8B949E';
+            ctx.font = '10px monospace';
+            ctx.fillText(price.toFixed(LOT_CONFIG.pricePrecision), 5, y - 2);
+        }
+        
+        for (let i = 0; i < visibleData.length; i++) {
+            const candle = visibleData[i];
+            const x = startX + i * spacing;
+            const isBullish = candle.close >= candle.open;
+            
+            const yOpen = 30 + ((maxPrice - candle.open) / priceRange) * (h - 60);
+            const yClose = 30 + ((maxPrice - candle.close) / priceRange) * (h - 60);
+            const yHigh = 30 + ((maxPrice - candle.high) / priceRange) * (h - 60);
+            const yLow = 30 + ((maxPrice - candle.low) / priceRange) * (h - 60);
+            
+            ctx.beginPath();
+            ctx.moveTo(x + candleWidth / 2, yHigh);
+            ctx.lineTo(x + candleWidth / 2, yLow);
+            ctx.strokeStyle = '#8B949E';
+            ctx.stroke();
+            
+            const bodyTop = Math.min(yOpen, yClose);
+            const bodyHeight = Math.max(1, Math.abs(yClose - yOpen));
+            ctx.fillStyle = isBullish ? '#3FB950' : '#F85149';
+            ctx.fillRect(x, bodyTop, candleWidth, bodyHeight);
+            ctx.strokeStyle = isBullish ? '#3FB950' : '#F85149';
+            ctx.strokeRect(x, bodyTop, candleWidth, bodyHeight);
+            
+            if (activeTrade && i === visibleData.length - 1) {
+                const pnl = calculatePnL(candle.close);
+                if (pnl !== null) {
+                    const labelY = yHigh - 10;
+                    const pnlText = `${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}`;
+                    ctx.font = 'bold 10px monospace';
+                    ctx.fillStyle = pnl >= 0 ? '#3FB950' : '#F85149';
+                    ctx.shadowBlur = 4;
+                    ctx.shadowColor = 'black';
+                    ctx.fillText(pnlText, x, labelY);
+                    ctx.shadowBlur = 0;
+                }
+            }
+        }
+        
+        for (const d of drawings) {
+            ctx.beginPath();
+            ctx.moveTo(d.start.x, d.start.y);
+            ctx.lineTo(d.end.x, d.end.y);
+            ctx.strokeStyle = '#D29922';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+    }
+    
+    function update() {
+        updateCurrentLiveCandle();
+        updateChartData();
+    }
+    
+    function setupDrawing() {
+        function getCanvasCoords(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            let clientX, clientY;
+            if (e.touches) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+        
+        canvas.addEventListener('mousedown', (e) => {
+            if (!drawingMode) return;
+            autoScroll = false;
+            isDrawing = true;
+            drawStart = getCanvasCoords(e);
+        });
+        
+        window.addEventListener('mousemove', (e) => {
+            if (!isDrawing || !drawingMode) return;
+            const current = getCanvasCoords(e);
+            renderChart();
+            ctx.beginPath();
+            ctx.moveTo(drawStart.x, drawStart.y);
+            ctx.lineTo(current.x, current.y);
+            ctx.strokeStyle = '#D29922';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        });
+        
+        window.addEventListener('mouseup', (e) => {
+            if (!isDrawing || !drawingMode) return;
+            const end = getCanvasCoords(e);
+            drawings.push({ start: drawStart, end: end });
+            isDrawing = false;
+            renderChart();
+        });
+    }
+    
+    function zoomIn() {
+        autoScroll = false;
+        zoomLevel = Math.min(3, zoomLevel + 0.2);
+        const visibleCandles = Math.floor(80 / zoomLevel);
+        visibleEndIndex = Math.min(visibleEndIndex, chartData.length - 1);
+        visibleStartIndex = Math.max(0, visibleEndIndex - visibleCandles);
+        renderChart();
+        consoleLog(`Zoom in: ${zoomLevel.toFixed(1)}x`, 'info');
+    }
+    
+    function zoomOut() {
+        autoScroll = false;
+        zoomLevel = Math.max(0.5, zoomLevel - 0.2);
+        const visibleCandles = Math.floor(80 / zoomLevel);
+        visibleStartIndex = Math.max(0, visibleStartIndex);
+        visibleEndIndex = Math.min(chartData.length - 1, visibleStartIndex + visibleCandles);
+        renderChart();
+        consoleLog(`Zoom out: ${zoomLevel.toFixed(1)}x`, 'info');
+    }
+    
+    function resetView() {
+        autoScroll = true;
+        zoomLevel = 1;
+        visibleEndIndex = chartData.length - 1;
+        const visibleCandles = Math.floor(80 / zoomLevel);
+        visibleStartIndex = Math.max(0, visibleEndIndex - visibleCandles);
+        renderChart();
+        consoleLog(`Chart view reset`, 'info');
+    }
+    
+    function changeTimeframe(minutes) {
+        currentTimeframe = minutes;
+        updateChartData();
+        resetView();
+        consoleLog(`Timeframe changed to ${minutes} minutes`, 'info');
+    }
+    
+    // Loading screen simulation
+    async function showLoadingScreen() {
+        const loadingScreen = document.getElementById('loadingScreen');
+        const progressBar = document.getElementById('loadingProgress');
+        const mainContainer = document.getElementById('mainContainer');
+        
+        const steps = [
+            { progress: 20, msg: 'Loading market data...' },
+            { progress: 40, msg: 'Initializing chart engine...' },
+            { progress: 60, msg: 'Configuring risk management...' },
+            { progress: 80, msg: 'Establishing data feed...' },
+            { progress: 100, msg: 'Ready' }
+        ];
+        
+        for (const step of steps) {
+            await new Promise(resolve => setTimeout(resolve, 300));
+            progressBar.style.width = `${step.progress}%`;
+            document.querySelector('.loading-text').textContent = step.msg;
+            consoleLog(step.msg, 'info');
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 500));
+        loadingScreen.style.opacity = '0';
+        mainContainer.classList.add('visible');
+        
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+        }, 500);
+    }
+    
+    function init() {
+        const container = document.querySelector('.chart-container');
+        const resizeCanvas = () => {
+            const rect = container.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            canvas.style.width = `${rect.width}px`;
+            canvas.style.height = `${rect.height}px`;
+            ctx = canvas.getContext('2d');
+            renderChart();
+        };
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        updateCurrentLiveCandle();
+        updateChartData();
+        setupDrawing();
+        
+        visibleEndIndex = chartData.length - 1;
+        const visibleCandles = Math.floor(80 / zoomLevel);
+        visibleStartIndex = Math.max(0, visibleEndIndex - visibleCandles);
+        renderChart();
+        
+        document.getElementById('buyBtn').onclick = handleBuy;
+        document.getElementById('sellBtn').onclick = handleSell;
+        document.getElementById('resetBtn').onclick = resetAccount;
+        
+        document.getElementById('drawBtn').onclick = () => {
+            drawingMode = !drawingMode;
+            document.getElementById('drawBtn').classList.toggle('active');
+            consoleLog(drawingMode ? 'Drawing mode enabled' : 'Drawing mode disabled', 'info');
+        };
+        
+        document.getElementById('clearDrawBtn').onclick = () => {
+            drawings = [];
+            renderChart();
+            consoleLog('All drawings cleared', 'info');
+        };
+        
+        document.getElementById('zoomInBtn').onclick = zoomIn;
+        document.getElementById('zoomOutBtn').onclick = zoomOut;
+        document.getElementById('resetViewBtn').onclick = resetView;
+        
+        document.querySelectorAll('.tf-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                changeTimeframe(parseInt(btn.dataset.tf));
+            };
+        });
+        
+        document.getElementById('riskType').onchange = () => {
+            const label = document.getElementById('riskLabel');
+            label.innerHTML = document.getElementById('riskType').value === 'percent' ? 'Risk %' : 'Risk $';
+            updateRiskPreview();
+            if (activeTrade) updateActiveTradeDisplay();
+        };
+        
+        document.getElementById('riskValue').oninput = () => {
+            updateRiskPreview();
+            if (activeTrade) updateActiveTradeDisplay();
+        };
+        
+        document.getElementById('atrPeriod').onchange = () => updateChartData();
+        
+        setInterval(() => update(), 500);
+        
+        // Show loading screen and initialize
+        showLoadingScreen().then(() => {
+            consoleLog('ChronosTrade Terminal v1.0 initialized', 'success');
+            consoleLog(`Capital: $${capital.toLocaleString()} | Risk: ${document.getElementById('riskValue').value}% | Min Lot: ${LOT_CONFIG.minLotSize} BTC`, 'info');
+        });
+    }
+    
+    init();
+</script>
+</body>
+</html>
